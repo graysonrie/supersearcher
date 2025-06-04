@@ -1,0 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap");
+
+:host {
+    scrollbar-width: thin;
+    scrollbar-color: var(--third-color) transparent;
+}
+
+.content {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.crawler-queue-viewer {
+    max-height: 20em;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.crawler-queue {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background-color);
+    border-radius: 20px;
+    margin: 1em;
+    padding: 1em;
+}
+
+.crawler-queue label {
+    color: var(--third-color);
+    font-size: 1em;
+    font-weight: 600;
+    margin: .1em;
+}
+
+.queue-item {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--third-color);
+    border-radius: 10px;
+    margin: .1em;
+    padding: .2em;
+    padding-left: 1em;
+
+}
+
+.queue-item label {
+    color: var(--background-color);
+    font-size: 0.9em;
+    font-weight: 400;
+}

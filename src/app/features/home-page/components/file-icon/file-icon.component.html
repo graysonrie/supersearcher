@@ -1,0 +1,11 @@
+<div class="content">
+  <ng-container *ngIf="icon$ | async as icon">
+    <img *ngIf="_isBase64" [src]="icon" />
+    <iconify-icon
+      *ngIf="!_isBase64"
+      [icon]="icon"
+      color="--icon"
+      [size]="iconSize"
+    />
+  </ng-container>
+</div>

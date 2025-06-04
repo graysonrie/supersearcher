@@ -1,0 +1,34 @@
+<div class="content" [ngStyle]="{ height: _footerSize + 'px' }">
+  <button
+    class="drag-and-collect"
+    (dragenter)="onDragAndCollectMouseEnter()"
+    (dragleave)="onDragAndCollectMouseLeave()"
+  >
+    <div class="button-content">
+        <ng-container *ngIf="!this._isExpanding; else isExpanding">
+            <div @fadeInOnEnter class="animated-content">
+              <iconify-icon
+                icon="keyframes"
+                size="1.2rem"
+                [style.pointerEvents]="'none'"
+              />
+              <label class="text" [style.pointerEvents]="'none'"
+                >Drag and Collect</label
+              >
+            </div>
+          </ng-container>
+      <ng-template #isExpanding>
+        <div @fadeInOnEnter class="animated-content expanding">
+          <iconify-icon
+            icon="plus"
+            size="1rem"
+            [style.pointerEvents]="'none'"
+          />
+          <label class="text" [style.pointerEvents]="'none'"
+            >Drop items here</label
+          >
+        </div>
+      </ng-template>
+    </div>
+  </button>
+</div>

@@ -1,0 +1,52 @@
+.custom-context-menu {
+    position: fixed;
+    background-color: var(--bg-primary);
+    padding: .4em;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+    min-width: 8em;
+    justify-content: center;
+}
+
+.custom-context-menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.custom-context-menu ul li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+button {
+    color: var(--text-primary);
+    text-align: left;
+    width: 100%;
+    border-radius: 10px;
+    border: 0px;
+    padding: .4em;
+    padding-left: .7em;
+    padding-right: .7em;
+}
+
+button:hover {
+    color: var(--text-primary);
+    background-color: var(--primary);
+}
+
+.divider{
+    display: flex;
+
+    margin-top: .2em;
+    margin-bottom: .2em;
+    height: 1px;
+    width: 100%;
+    background-color: var(--bg-light);
+}
+/*
+<div *ngFor="let component of componentsList">
+
+</div>
+*/

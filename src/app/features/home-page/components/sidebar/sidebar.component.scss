@@ -1,0 +1,43 @@
+:host {
+  scrollbar-width: thin;
+  scrollbar-color: var(--input) transparent;
+}
+
+.content {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  background-color: var(--bg-light);
+  padding: 1em;
+  height:100%;
+  padding-right: 0rem;
+  box-sizing: border-box;
+}
+
+.noscroll-region{
+  display: flex;
+  position: relative;
+  flex-direction: column;
+
+}
+
+.scroll-region {
+  display: block;
+  flex-direction: column;
+  overflow-y: auto;
+  width: 100%;
+
+  padding-bottom: 2rem;
+}
+
+.divider {
+  display: block;
+  border-radius: 10px;
+  height: 2px;
+  width: 100%;
+  background-color: var(--input);
+  margin-top: .5rem;
+
+  margin-bottom: .5rem;
+}
+

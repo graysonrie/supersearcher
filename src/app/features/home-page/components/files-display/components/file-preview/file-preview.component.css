@@ -1,0 +1,27 @@
+:host {
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-color) transparent;
+
+}
+
+.content {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    flex: 1;
+    height: 100%;
+}
+
+.text-preview {
+    display: flex;
+    padding: .5em;
+    font-size: .9em;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+    overflow-y: auto;
+    color: var(--contrast-color);
+    height: 60vh;
+    box-sizing: border-box;
+}
+

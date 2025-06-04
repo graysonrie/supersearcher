@@ -1,0 +1,14 @@
+<div class="container">
+  <app-dropdown-button-modal *ngIf="_isDropdownType; else iconButton" class="content">
+    <div name class="icon">
+      <iconify-icon [icon]="type" />
+      <label>{{utilityName}}</label>
+    </div>
+  </app-dropdown-button-modal>
+
+  <ng-template #iconButton>
+    <button class="content" [appTooltip]="utilityName" [ngClass]="{'usable': _isUsable}">
+      <iconify-icon [icon]="type" size="1.2rem" (click)="onClick()" />
+    </button>
+  </ng-template>
+</div>

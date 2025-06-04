@@ -1,0 +1,19 @@
+<div *ngIf="this.tab">
+
+    <button class="tab" (click)="onClick()" [ngClass]="{'active': activeIndex === this.tab.index}">
+      <div class="tab-content">
+        <app-file-icon [filePath]="this.tab.fullPath" [isDirectory]="true" />
+        <label>{{ this.tab.label }}</label>
+      </div>
+      <div *ngIf="openPaths$ | async as openPaths">
+        <button
+          [ngClass]="{ hidden: openPaths.length <= 1 }"
+          class="close-button"
+          (click)="closeTab($event)"
+        >
+          <iconify-icon icon="close" />
+        </button>
+      </div>
+    </button>
+
+</div>

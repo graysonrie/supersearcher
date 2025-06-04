@@ -1,0 +1,18 @@
+    <div class="container" [ngClass]="{'up':_show}">
+        <div class="name">
+            <div class="title">
+                <app-standard-loader *ngIf="_numItemsBeingIndexed>0"/> 
+                <p>Indexing ({{_numItemsBeingIndexed}}):</p>
+            </div>
+            <button (click)="onDropdownClick()">
+                <iconify-icon [icon]="_show ? 'dropDown' : 'dropUp'"/>
+            </button>
+        </div>
+        <div class="scroll">
+            <div *ngFor="let item of _items">
+                <div class="item" [title]="item.Path">
+                    <span>{{item.Path}}</span>
+                </div>
+            </div>
+        </div>
+    </div>

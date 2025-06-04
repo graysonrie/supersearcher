@@ -1,0 +1,62 @@
+/* From Uiverse.io by gharsh11032000 */
+.radio-buttons-container {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+
+.radio-button {
+    display: flex;
+    position: relative;
+    cursor: pointer;
+    margin: .8em;
+    align-items: center;
+    
+}
+
+.radio-button__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.radio-button__label {
+    display: flex;
+    padding-left: 1.5rem;
+    position: relative;
+    font-size: inherit;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.radio-button__custom {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    border: 2px solid #555;
+    transition: all 0.1s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.radio-button__input:checked+.radio-button__label .radio-button__custom {
+    border-color: var(--primary);
+    background-color: var(--primary);
+    color: var(--primary);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+}
+
+.radio-button__input:checked+.radio-button__label .content{
+    color:var(--text-primary);
+}
+
+.content {
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+}

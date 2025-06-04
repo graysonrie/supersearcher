@@ -1,0 +1,182 @@
+@font-face {
+  font-family: "Jaro";
+  src: url("./assets/fonts/Jaro-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "REM";
+  src: url("./assets/fonts/REM-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("./assets/fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("./assets/fonts/Poppins-SemiBold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Karla";
+  src: url("./assets/fonts/Karla-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "RedHatDisplay";
+  src: url("./assets/fonts/RedHatDisplay-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "RedHatDisplay";
+  src: url("./assets/fonts/RedHatDisplay-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+
+* {
+  /* Disables the default blue bg when highlighting text with the cursor*/
+  user-select: none;
+
+}
+
+:root {
+  margin: 0px;
+  --bg-light: #000000b7;
+  --bg-primary: #000000a4;
+  --bg-solid: #242424;
+  --bg-dark: #000000c9;
+  --bg-transparent: #0000009d;
+
+  --input: #ffffff15;
+
+
+  --bg-grad1: #1e1b20;
+  --bg-grad2: #1b1b1bfb;
+  --alt: #0000003d;
+
+  --primary: #42c26c;
+  --primary-light: #50ffff;
+
+  --text-primary: #ffffff;
+  --text-muted: #ffffff88;
+
+  --icon: #979797;
+
+  --select: #ffffff65;
+  --select-primary: #24ff9980;
+
+  --col-audio: #ff4848;
+  --col-doc: #4869ff;
+  --col-other: #45ad3c;
+}
+
+.light-theme {
+  --bg-light: #e6e6e6;
+  --bg-primary: #ffffff;
+  --bg-dark: #e3e0ff83;
+  --bg-transparent: #ffffff85;
+
+  --input: #ebe6ff;
+
+  --bg-grad1: #f9f1ff;
+  --bg-grad2: #f3f3f3fb;
+  --alt: #e6e6e6;
+
+  --primary: #da44ff;
+  --primary-light: #ff23b6;
+
+  --text-primary: #000000;
+  --text-muted: #c4c4c4;
+
+  --icon: #78aeff;
+
+  --select-primary: #85e3ff80;
+}
+
+
+input::selection {
+  background-color: var(--primary);
+}
+
+html {
+  // background: radial-gradient(
+  //   circle at 100% 107%,
+  //   var(--bg-primary) 0%,
+  //   var(--bg-grad1) 30%,
+  //   var(--bg-grad2) 60%,
+  //   var(--bg-primary) 100%
+  // );
+  backdrop-filter: blur(10px);
+
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  overflow-x: hidden;
+  min-width: 0px;
+  overflow-y: hidden;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+label,
+button,
+input {
+  line-height: normal;
+  margin: 0px;
+  font-weight: 400;
+  color: var(--font-color);
+  font-size: 12px;
+  font-family: 'Segoe UI';
+  min-width: 0px;
+}
+
+input {
+  min-width: 0px;
+}
+
+button {
+  cursor: pointer;
+  background-color: transparent;
+}
+
+/*
+body {
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease;
+}
+
+
+* {
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease;
+}
+*/
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}

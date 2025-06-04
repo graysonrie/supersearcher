@@ -1,0 +1,12 @@
+<div class="content" [ngClass]="{'hidden':text.length==0}">
+    <p>{{text}}</p>
+
+    <div class="metadata">
+        <p *ngIf="occurences == 1; else occurencesNot1"> found {{occurences}} occurence</p>
+    </div>
+
+</div>
+
+<ng-template #occurencesNot1>
+    <p> found {{occurences}} occurences</p>
+</ng-template>

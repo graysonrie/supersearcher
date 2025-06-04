@@ -1,0 +1,21 @@
+<div class="layout" (click)="onClick()">
+  <app-search-overlay />
+
+  <div class="body">
+    <app-top-header />
+
+    <ng-container *ngIf="_isOnHomePage; else browserView">
+      <app-home-view />
+    </ng-container>
+
+    <ng-template #browserView>
+      <app-file-browser
+        [isLoading]="isLoading"
+        (fileClickedOn)="previewFile = $event"
+      />
+    </ng-template>
+
+    <app-files-display-footer />
+    <!-- <app-file-preview [file]="previewFile?.FilePath"/> -->
+  </div>
+</div>

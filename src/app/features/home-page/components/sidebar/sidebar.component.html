@@ -1,0 +1,36 @@
+<div class="content" [ngStyle]="{ width: previewWidth + 'px' }">
+  
+  <div class="scroll-region">
+    <app-button-w-icon
+      iconName="home"
+      (click)="homeButtonClicked()"
+      iconSize="1.2rem"
+    >
+      Home
+    </app-button-w-icon>
+
+    <div class="divider"></div>
+
+    <div *ngIf="quickAccessPaths$ | async as paths">
+      <div *ngFor="let path of paths">
+        <app-quick-access-shortcut
+          [path]="path"
+          (click)="quickAccessShortcutClicked(path)"
+        />
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div *ngIf="drives$ | async as drives">
+      <div *ngFor="let drive of drives">
+        <app-drive-result [drive]="drive" (click)="driveClicked(drive)" />
+      </div>
+    </div>
+    <div class="divider"></div>
+</div>
+
+  <app-extend-bar-vertical [minWidth]="30" [startingWidth]="200" />
+</div>
+
+    <app-info-box/>

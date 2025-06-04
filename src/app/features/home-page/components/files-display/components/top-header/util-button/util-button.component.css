@@ -1,0 +1,38 @@
+.container{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding-left: .25rem;
+  padding-right: .25rem;
+}
+
+.content {
+  display: flex;
+  border: 0px;
+  padding: 0.1rem;
+  color: var(--text-muted);
+  transition: color 0.1s ease-in-out;
+}
+
+.content.usable {
+  color: var(--primary);
+}
+
+.content.usable:hover {
+  color: var(--text-primary);
+}
+
+.icon {
+  display: flex;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  align-items: center;
+  color: var(--text-primary);
+}
+
+label {
+  white-space: nowrap;
+}

@@ -1,0 +1,63 @@
+
+
+.container{
+    position: absolute;
+    bottom: -9.2rem; // Kindof a arbitrary value but who cares
+    left:1rem;
+    display:flex;
+    flex-direction: column;
+    padding:.5rem;
+    background:var(--bg-primary);
+    border-radius: .5rem;
+    color:var(--text-primary);
+    border:1px var(--primary) solid;
+    height:10rem;
+    width: 10rem;
+    flex:0;
+    z-index:10;
+}
+
+.container.up{
+    bottom: 1rem;
+}
+
+
+.name{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.name button{
+    padding: 0px;
+    border:none;
+}
+.name button:hover{
+    color:var(--primary)
+}
+.title{
+    display: flex;
+    gap:4px;
+    flex-direction: row;
+}
+.title app-standard-loader{
+    display:block;
+}
+
+.scroll{
+    display:flex;
+    flex-direction: column;
+    height:100%;
+    overflow-y:auto;
+}
+
+.item{
+    display:flex;
+    padding:2px;
+    margin:2px;
+    align-items: center;
+    background:var(--input);
+    border-radius: .5rem;
+    color:var(--text-primary);
+    font-size:x-small;
+    overflow-x: hidden;
+}

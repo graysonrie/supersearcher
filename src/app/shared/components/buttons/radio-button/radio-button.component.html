@@ -1,0 +1,13 @@
+<div class="radio-buttons-container" (click)="toggleRadio()">
+
+    <div class="radio-button">
+        <input name="radio-group" id="radio2" class="radio-button__input" type="radio" [checked]="isChecked">
+        <label for="radio2" class="radio-button__label">
+            <span class="radio-button__custom"></span>
+            <div class="content">
+                <ng-content></ng-content>
+            </div>
+        </label>
+    </div>
+
+</div>

@@ -1,0 +1,57 @@
+.content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(11em, 1fr));
+    /* Creates space between items */
+    padding: .2em;
+    padding-left: 1em;
+    gap: .3em;
+
+    align-items: center;
+}
+
+.pin {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.file {
+    
+    display: flex;
+    font-size: .8rem;
+    background-color: var(--bg-primary);
+    border: 0px;
+    padding: .2em;
+    padding-left: .5em;
+    padding-right: .5em;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    width: 100%;
+
+}
+
+label {
+    text-wrap: nowrap;
+    pointer-events: none;
+    color: var(--text-primary);
+}
+
+button {
+    transform: all .5s ease;
+}
+
+button:hover {
+    background-color: var(--select-primary);
+}
+
+.file-container {
+    position: relative;
+    justify-content: center;
+
+}
+
+.file-container:hover {
+    visibility: visible;
+    opacity: 1;
+}

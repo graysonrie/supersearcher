@@ -1,0 +1,15 @@
+<div *ngIf="isVisible" [style.left.px]="xPos" [style.top.px]="yPos" class="custom-context-menu">
+    <ul>
+
+        <div *ngFor="let item of content">
+            <div *ngIf="isItemAButton(item); else divBlock">
+                <button (click)="onClick($event, item.action)">{{item.name}}</button>
+            </div>
+            <ng-template #divBlock>
+                <div class="divider"></div>
+            </ng-template>
+
+        </div>
+
+    </ul>
+</div>

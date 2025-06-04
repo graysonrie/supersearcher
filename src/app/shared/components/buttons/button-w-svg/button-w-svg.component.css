@@ -1,0 +1,44 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    margin: 0.2em;
+    border: 0px;
+    border-left: 4px solid var(--secondary-color);
+    color: var(--text-primary);
+    border-radius: 5px;
+    overflow: hidden;
+    justify-content: left;
+    justify-content: center;
+    box-sizing: border-box; 
+    transition: all .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  }
+  
+  .content:hover{
+    background-color: var(--select);
+
+  }
+  
+  .icon {
+    margin-right: .5em;
+  }
+  
+  .content button {
+    line-height: 0;
+    border: 0px;
+    margin: 0.1em;
+  }
+  
+  .name {
+    line-height: 0;
+    font-size: .8rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .metadata p {
+    line-height: 0;
+    font-size: 0.6em;
+    color: var(--primary-darker);
+  }
+  

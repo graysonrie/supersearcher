@@ -1,0 +1,35 @@
+
+  <app-modal-popup
+    [isVisible]="(isVisible$ | async) ?? false"
+    title="Warning"
+    (closeRequested)="onCloseRequested()"
+    class="content"
+  >
+    <div *ngIf="currentDir$ | async as pathFrom">
+      <div *ngIf="itemsAdding$ | async as itemsAdding">
+        <div *ngIf="dest$ | async as dest">
+          <div *ngIf="itemsAdding == 1; else elseBlock">
+            <p>
+              Are you sure you want to move <b>{{ itemsAdding }}</b> item from
+              <b>{{ pathFrom }}</b> to <b>{{ dest.FilePath }}</b
+              >?
+            </p>
+          </div>
+          <ng-template #elseBlock>
+            <p>
+              Are you sure you want to move <b>{{ itemsAdding }}</b> items from
+              <b>{{ pathFrom }}</b> to <b>{{ dest.FilePath }}</b
+              >?
+            </p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+
+    <app-pretty-button>Yes</app-pretty-button>
+
+    <app-radio-button (onToggle)="onDontAskAgainToggled($event)">
+      <label>Don't ask again</label>
+    </app-radio-button>
+  </app-modal-popup>
+

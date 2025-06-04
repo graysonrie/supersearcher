@@ -1,0 +1,22 @@
+.content{
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    border-radius: 10px;
+    padding: .8em;
+    background-color: var(--bg-transparent);
+}
+
+.hidden{
+    pointer-events: none;
+    visibility: hidden;
+}
+
+.metadata{
+    font-size: .8em; 
+}
+
+p{
+    color: var(--primary);
+    margin: 0px;
+}

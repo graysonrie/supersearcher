@@ -1,0 +1,49 @@
+.window-chrome {
+    position:  absolute;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: space-between;
+    /* background-color: var(--bg-light); */
+    color: var(--text-primary);
+}
+
+.title-bar {
+    flex: 1;
+    height: 100%;
+    -webkit-app-region: drag;
+    display: flex;
+    align-items: center;
+    z-index: -10;
+}
+
+.window-controls {
+    z-index: 10;
+    display: flex;
+    height: 100%;
+    pointer-events: all !important;
+}
+
+.window-controls button {
+    display: flex;
+    font-size: 1.6em;
+    width: 48px;
+    height: 100%;
+    border: none;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+    align-items: center;
+    justify-content: center;
+    transition: all .1s ease;
+}
+
+.maximize:hover, .minimize:hover {
+    background-color: var(--select-primary);
+}
+
+.close:hover {
+    color: white;
+    background-color: rgb(224, 0, 0);
+}

@@ -1,0 +1,9 @@
+.content {
+    flex: 0 0 auto;
+    width: .5em;
+    height: 100%;
+    margin-left: .2em;
+    margin-right: .2em;
+    background-color: var(--secondary-color);
+    border-radius: 2px;
+}

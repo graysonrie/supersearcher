@@ -1,0 +1,9 @@
+<div class="content" [ngStyle]="{'width': previewWidth + 'px'}">
+    <app-extend-bar [minWidth]="50" />
+
+    <span *ngIf="!isLoading; else loader" class="text-preview">{{textPreview}}</span>
+</div>
+
+<ng-template #loader>
+    <p>loading</p>
+</ng-template>

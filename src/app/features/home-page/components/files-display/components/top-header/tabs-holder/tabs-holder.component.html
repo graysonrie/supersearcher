@@ -1,0 +1,8 @@
+<div class="content">
+  <div *ngFor="let tab of tabs">
+    <app-directory-tab [tab]="tab" />
+  </div>
+  <button class="add-tab" (click)="addTab()">
+    <label>+</label>
+  </button>
+</div>

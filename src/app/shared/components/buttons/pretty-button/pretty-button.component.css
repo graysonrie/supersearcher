@@ -1,0 +1,22 @@
+button{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    border:none;
+    padding: .5em;
+    font-size: .8rem;
+    border-radius: 9px;
+    background: var(--primary);
+    color: var(--text-primary);
+}
+
+button:hover {
+    background: var(--primary-light);
+    box-shadow: 7px 5px 56px -14px var(--primary-light);
+}
+
+button:active {
+    transform: scale(1);
+    box-shadow: 7px 5px 56px -10px var(--primary-light);
+}

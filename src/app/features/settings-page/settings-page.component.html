@@ -1,0 +1,46 @@
+<div class="content">
+    <button (click)="leaveSettingsButtonClick()">back to home</button>
+
+    <div class="crawler-queue">
+        <label>File crawler queue:</label>
+        <div class="crawler-queue-viewer">
+            <div *ngIf="crawlerQueue.length > 0; else loadingTemplate">
+                <div *ngFor="let dir of crawlerQueue" class="queue-item">
+                    <label>{{ dir.Path }}</label>
+                    <label>Priority: {{ dir.Priority }}</label>
+                </div>
+            </div>
+        </div>
+
+        <label>File crawler priorities:</label>
+        <div class="crawler-queue-viewer">
+            <div *ngIf="crawlerPriorityCounts.length > 0; else loadingTemplate">
+                <div *ngFor="let dir of crawlerPriorityCounts" class="queue-item">
+                    <label *ngIf="dir.count !== 1; else singularLabel">
+                        {{ dir.count }} directories with priority {{ dir.priority }}
+                    </label>
+                    <ng-template #singularLabel>
+                        <label>
+                            {{ dir.count }} directory with priority {{ dir.priority }}
+                        </label>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+
+        <label>Analytics:</label>
+        <div class="crawler-queue-viewer">
+            <div *ngIf="crawlerAnalyzerData.length > 0; else loadingTemplate">
+                <div *ngFor="let dataPoint of crawlerAnalyzerData" class="queue-item">
+                    <label>
+                        {{ dataPoint.label}}: {{ dataPoint.data }}
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #loadingTemplate>
+        <label>fetching the latest data...</label>
+    </ng-template>
+</div>

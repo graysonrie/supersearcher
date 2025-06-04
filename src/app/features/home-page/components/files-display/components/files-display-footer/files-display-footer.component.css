@@ -1,0 +1,46 @@
+.content {
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+  padding: 0.6em;
+  box-sizing: border-box;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1rem;
+  /* This makes up for some of the layout jank causes byt crappy css*/
+  /* padding-bottom: 2rem; */
+}
+
+.content .button {
+  display: block;
+  border-radius: 20px;
+  justify-content: center;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding: 0.3rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  display: flex;
+  height: 100%;
+  border: 0px;
+  align-items: center;
+  background-color: var(--input);
+  color: var(--text-primary);
+  transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.content .button:hover{
+  background-color: var(--primary);
+}
+
+label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+iconify-icon {
+  padding-right: 0.5em;
+}

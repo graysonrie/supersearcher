@@ -1,0 +1,21 @@
+<div class="content">
+  <app-tabs-holder />
+  <app-current-directory-bar />
+  <div class="heading">
+
+
+    <div #toolbarButtonContainer class="toolbar-buttons">
+      <div *ngFor="let button of visibleUtilButtons">
+        <app-util-button [type]="button" class="toolbar-button" />
+      </div>
+    </div>
+
+    <!-- <button>
+        <iconify-icon icon="dots" size="1.2rem"/>
+      </button> -->
+
+    <!-- <app-searchbar /> -->
+  </div>
+
+  <app-pinned-files-header />
+</div>

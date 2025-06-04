@@ -1,0 +1,13 @@
+<div class="content">
+  <app-sidebar></app-sidebar>
+
+  <div class="main-layout">
+
+
+    <div class="body">
+      <ng-container *ngIf="currentPage">
+        <ng-container *ngComponentOutlet="currentPage" />
+      </ng-container>
+    </div>
+  </div>
+</div>

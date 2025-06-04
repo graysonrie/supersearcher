@@ -1,0 +1,16 @@
+<button class="content">
+    <div class="name">
+        <button class="content-button">
+            <ng-content select="[name]"></ng-content>
+        </button>
+
+        <div class="dropdown-button">
+            <iconify-icon [icon]="dropDownIcon" [color]="dropdownColor" size="1.2em" />
+        </div>
+    </div>
+
+    <div *ngIf="expanded" @dropdownAnimation class="content-wrapper">
+        <ng-content></ng-content>
+    </div>
+
+</button>

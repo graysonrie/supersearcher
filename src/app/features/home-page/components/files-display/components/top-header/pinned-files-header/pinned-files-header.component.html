@@ -1,0 +1,23 @@
+<div class="content">
+  <div *ngFor="let file of pinnedFiles">
+    <div class="file-container">
+      <button
+        class="file"
+        (click)="onFileClick(file)"
+        [appTooltip]="file.FilePath"
+        (contextmenu)="onFileRightClick($event, file)"
+      >
+        <span class="pin">
+          <iconify-icon icon="pin" size="1.2em" color="--text-primary" />
+          <label>{{ processFilename(file.Name) }}</label>
+        </span>
+
+        <app-file-icon
+          [filePath]="file.FilePath"
+          [isDirectory]="file.IsDirectory"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+<app-context-menu #contextMenu />

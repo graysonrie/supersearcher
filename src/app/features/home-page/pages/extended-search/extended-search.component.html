@@ -1,0 +1,6 @@
+<div class="content">
+  <div class="top">
+    <app-search-input [text]="_inputText" (textChanged)="onInputTextChanged($event)" #searchInput/>
+  </div>
+  <app-file-browser [showFullFilePaths]="true"/>
+</div>

@@ -1,0 +1,32 @@
+:host {
+    display: flex;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary) transparent;
+    flex: 1;
+}
+
+.content {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding-top:.5rem;
+}
+
+.top {
+    display: flex;
+    flex-direction: column;
+
+    padding: 1rem;
+}
+
+.top label{
+    font-size: .8rem;
+    line-height: 1rem;
+    margin-bottom: .5em;
+}
+
+.content label {
+    color: var(--primary);
+}

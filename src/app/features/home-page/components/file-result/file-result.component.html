@@ -1,0 +1,52 @@
+<div *ngIf="_filesGettingIndexed$ | async as filesGettingIndexed">
+  <div *ngIf="file" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+    <button
+      class="content"
+      [ngClass]="{
+        icon: _isIconType,
+        selected: selected,
+        grow: shouldGrow,
+        hide: state.hide,
+        altcolor: altColor && !selected && !_isIconType
+      }"
+    >
+      <div class="body" [ngClass]="{ icon: _isIconType }">
+        <div *ngIf="isPinned">
+          <iconify-icon icon="pin" size="1em" color="--icon" />
+        </div>
+
+        <app-file-icon
+          [filePath]="file.FilePath"
+          [isDirectory]="file.IsDirectory"
+          [viewType]="viewType"
+        />
+
+        <div class="name" [ngClass]="{ hide: state.hide, icon: _isIconType }">
+          <div class="innername">
+            <input
+              #renameInputBox
+              type="text"
+              *ngIf="_isRenaming; else fileName"
+              [(ngModel)]="fileNameField"
+              (blur)="cancelRename()"
+              spellcheck="false"
+            />
+            <ng-template #fileName>
+              <app-highlightable-label
+                [text]="fileDisplayName"
+                [highlight]="state.highlightedText"
+              />
+            </ng-template>
+          </div>
+          <iconify-icon
+            class="indexed-icon"
+            title="Currently being indexed"
+            icon="lightning"
+            *ngIf="isFileBeingIndexed(filesGettingIndexed)"
+          />
+        </div>
+      </div>
+      <p class="metadata" *ngIf="displayPath">{{ file.FilePath }}</p>
+    </button>
+  </div>
+</div>

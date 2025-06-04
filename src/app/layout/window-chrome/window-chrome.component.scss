@@ -1,0 +1,31 @@
+.window-chrome {
+    display: flex;
+    gap: 8px;
+    padding: 10px;
+    align-items: center;
+    -webkit-app-region: drag;
+}
+
+.window-chrome label {
+    margin-left: 10px;
+    color: var(--font-color);
+}
+
+button {
+    font-size: 15px;
+    width: 15px;
+    height: 15px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-app-region: no-drag;
+}
+.close {
+    background-color: var(--secondary-color);
+}
+.minimize {
+    background-color: var(--third-color);
+}
+.maximize {
+    background-color: var(--fourth-color);
+}

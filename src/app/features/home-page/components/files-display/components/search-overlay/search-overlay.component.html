@@ -1,0 +1,31 @@
+<div
+  class="backdrop"
+  *ngIf="_isVisible"
+  (click)="onBackdropClicked()"
+  @fadeInOnEnter
+>
+  <div class="content" (click)="$event.stopPropagation()">
+    <div *ngIf="filterLabels$ | async as filterLabels">
+      <div *ngIf="filterLabels.length > 0" class="filters-container">
+        <label class="filterby">Filter by:</label>
+        <div *ngFor="let l of filterLabels">
+          <label class="filterby">{{ l }}</label>
+        </div>
+      </div>
+    </div>
+    <label>Find a file:</label>
+    <app-line-input
+      #searchInput
+      [text]="_inputText"
+      [highlightSubstring]="_highlightSubstring"
+      (textChanged)="onInputTextChange($event)"
+      (keydown.enter)="onEnterPressed()"
+      (keydown.escape)="onBackdropClicked()"
+    />
+    <div class="results" [ngStyle]="{ height: _resultsHeight + 'px' }">
+      <div *ngFor="let file of files" [@slideInRight]>
+        <app-file-result [file]="file" [maxTextLength]="30" class="item" />
+      </div>
+    </div>
+  </div>
+</div>

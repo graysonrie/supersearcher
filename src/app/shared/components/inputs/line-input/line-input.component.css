@@ -1,0 +1,13 @@
+.content {
+  border: none;
+  color: var(--text-primary);
+  background-color: transparent;
+  border-bottom: 1px solid;
+  border-color: var(--text-primary);
+  display: block;
+  font-size: inherit;
+}
+
+.content:focus {
+  outline: none;
+}

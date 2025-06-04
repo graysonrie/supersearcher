@@ -1,0 +1,57 @@
+:host {
+  flex: 1;
+  min-width: 0px;
+}
+
+.InputContainer {
+  height: 100%;
+  padding-left: .4rem;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  overflow: hidden;
+  cursor: pointer;
+  font-size: .8rem;
+}
+
+.input {
+  color: var(--text-primary);
+  background-color: transparent;
+  font-size: 1.1em;
+  height: 100%;
+  border: none;
+  outline: none;
+  text-overflow: ellipsis;
+  caret-color: var(--secondary-color);
+  flex-grow: 1;
+}
+
+input:hover {
+  cursor: pointer;
+}
+
+.block {
+  align-items: center;
+  line-height: 0px;
+  font-size: 0.9em;
+  border-radius: 5px;
+  color: var(--text-muted);
+}
+
+.block:hover {
+  background-color: var(--select-primary);
+  color: var(--text-primary);
+}
+
+.breadcrumb {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  padding: 0.2em;
+  padding-right: 0.4em;
+  padding-left: 0.4em;
+}
+
+.breadcrumb label {
+  text-wrap: nowrap;
+}

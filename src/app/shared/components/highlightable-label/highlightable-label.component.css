@@ -1,0 +1,13 @@
+label{
+    color: inherit;
+    font-size: inherit;
+    pointer-events: none;
+    text-wrap: inherit;
+    overflow-wrap: break-word;
+    white-space: wrap;
+}
+
+label .highlight{
+    color: var(--text-primary);
+    background-color: var(--primary);
+}

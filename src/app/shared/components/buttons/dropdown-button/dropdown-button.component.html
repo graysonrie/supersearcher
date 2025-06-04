@@ -1,0 +1,26 @@
+<div class="content">
+    <div class="name">
+        <button class="content-button" [ngClass]="{'active':onClick}">
+
+            <label>
+                {{text}}
+            </label>
+        </button>
+
+        <button class="dropdown-button" (click)="onDropdownClick()" (mouseenter)="dropdownHoverEnter()"
+            (mouseleave)="dropdownHoverExit()">
+            <iconify-icon [icon]="dropDownIcon" [color]="dropdownColor" size="1.2em" />
+        </button>
+    </div>
+
+    <div *ngIf="expanded" @dropdownAnimation class="content-wrapper">
+        <ng-content></ng-content>
+    </div>
+
+</div>
+
+<!--
+<div class="colored">
+    <app-custom-icon/>
+</div>
+-->
