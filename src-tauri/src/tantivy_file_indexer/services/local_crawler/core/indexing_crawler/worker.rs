@@ -5,7 +5,10 @@ use tokio::sync::mpsc::error::TryRecvError;
 use crate::{
     shared::models::sys_file_model::SystemFileModel,
     tantivy_file_indexer::{
-        services::local_crawler::core::indexing_crawler::{idle, plugins::{FiltererPlugin, GarbageCollectorPlugin, ThrottleAmount, ThrottlePlugin}},
+        services::local_crawler::core::indexing_crawler::{
+            idle,
+            plugins::{FiltererPlugin, GarbageCollectorPlugin, ThrottleAmount, ThrottlePlugin},
+        },
         shared::{
             async_retry,
             indexing_crawler::{
@@ -20,7 +23,6 @@ use crate::{
 
 use super::{
     crawler::{self, CrawlerError},
-
     task_manager::{CrawlerManagerMessageReceiver, CrawlerMessage},
 };
 
@@ -119,9 +121,7 @@ where
                         if num_files_processed >= self.batch_size {
                             // Commit all and drain the bank of files
                             num_files_processed = 0;
-                            files_bank.clear();
-                            // ! REENABLE THIS:
-                            //files_bank = self.commit_files_bank(files_bank).await;
+                            files_bank = self.commit_files_bank(files_bank).await;
                         }
                     }
                     None if !files_bank.is_empty() => {
@@ -224,13 +224,7 @@ where
         C: CrawlerQueueApi,
     {
         let filterer_clone = self.filterer.clone();
-        match crawler::crawl(
-            directory,
-            Arc::clone(&self.crawler_queue),
-            filterer_clone,
-        )
-        .await
-        {
+        match crawler::crawl(directory, Arc::clone(&self.crawler_queue), filterer_clone).await {
             Ok(dtos) => {
                 return dtos;
             }
