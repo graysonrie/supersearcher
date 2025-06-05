@@ -1,6 +1,6 @@
 use crate::tantivy_file_indexer::shared::cancel_task::CancellableTask;
 use std::{path::PathBuf, sync::Arc};
-use tokio::sync::RwLock;
+use tokio::{sync::RwLock, task::JoinHandle};
 
 use super::notifier;
 
@@ -16,7 +16,7 @@ impl DirectoryWatcherService {
             is_watching: RwLock::new(false),
         }
     }
-    pub async fn watch<F>(self: &Arc<Self>, dir: PathBuf, on_changes: F)
+    pub async fn spawn_watch_task<F>(self: &Arc<Self>, dir: PathBuf, on_changes: F)->JoinHandle<F::Output>
     where
         F: Fn() + Send + 'static,
     {
@@ -34,7 +34,7 @@ impl DirectoryWatcherService {
                 println!("Directory watcher task error: {}", err);
             }
             *self_clone.is_watching.write().await = false;
-        });
+        })
     }
     pub async fn stop_watching(&self) {
         self.watcher_task.cancel().await;

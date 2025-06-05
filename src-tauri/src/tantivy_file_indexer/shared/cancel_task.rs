@@ -6,32 +6,21 @@ type AtomicOption<T> = Arc<RwLock<Option<T>>>;
 #[derive(Clone)]
 pub struct CancellableTask {
     current_task: AtomicOption<(watch::Sender<()>, JoinHandle<()>)>,
+    completed: (watch::Sender<bool>, watch::Receiver<bool>),
 }
 
 impl CancellableTask {
     pub fn new() -> Self {
+        let (tx, rx) = watch::channel(false);
         Self {
             current_task: Arc::new(RwLock::new(None)),
+            completed: (tx, rx),
         }
     }
-
-    /// Dispatch the task and watch for cancellation but don't return the result.
-    pub fn run_unwatched<T>(&self, task: JoinHandle<T>) -> Result<(), String>
-    where
-        T: Send + 'static,
-    {
-        let self_clone = self.clone();
-        tokio::spawn(async move {
-            self_clone.run_internal(task, || {}).await
-        });
-        Ok(())
-    }
-
 
     /// Runs a new task, canceling any previously running task.
     pub async fn run<T>(&self, task: JoinHandle<T>) -> Result<T, String>
     where
-
         T: Send + 'static,
     {
         self.run_internal(task, || {}).await
@@ -60,18 +49,30 @@ impl CancellableTask {
 
         self.current_task.write().await.replace((cancel_tx, handle));
 
-        match result_rx.await {
+        let result = match result_rx.await {
             Ok(Ok(res)) => res.map_err(|e| e.to_string()),
             Ok(Err(e)) => Err(e.to_string()),
             Err(_) => Err("Task completion channel was dropped".into()),
-        }
+        };
+        let _ = self.completed.0.send(true);
+        result
     }
 
     /// Cancels any currently running task.
     pub async fn cancel(&self) {
+        let _ = self.completed.0.send(false);
         if let Some((cancel_tx, handle)) = self.current_task.write().await.take() {
             let _ = cancel_tx.send(()); // Signal cancellation
             let _ = handle.await; // Wait for the task to finish
+        }
+    }
+
+    pub async fn wait_until_complete(&self) {
+        let mut rx = self.completed.1.clone();
+        while !*rx.borrow() {
+            if rx.changed().await.is_err() {
+                return; // Channel closed
+            }
         }
     }
 }

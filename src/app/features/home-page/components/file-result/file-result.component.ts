@@ -51,7 +51,8 @@ export class FileResultComponent implements OnInit, DoCheck {
   mouseOver = false;
 
   get shouldGrow() {
-    return (this.state.draggedOver || this.mouseOver) && !this.state.hide;
+    // * checking for mouse over here seems to be redundant
+    return (this.state.draggedOver /*|| this.mouseOver*/) && !this.state.hide;
   }
 
   @Input() file: FileModel | undefined;

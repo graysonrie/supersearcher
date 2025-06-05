@@ -3,6 +3,7 @@ import {
   ElementRef,
   EventEmitter,
   HostListener,
+  Inject,
   Input,
   NgZone,
   OnChanges,

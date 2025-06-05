@@ -31,8 +31,8 @@ import { Subscription } from "rxjs";
     HomePageSearchService,
     DirectoryNavigatorService,
     DirectoryHistoryService,
-    // TODO: reenable when it works properly
-    // DirectoryWatcherService, Disabling for now.
+    // TODO: disable if being bad
+    // DirectoryWatcherService, 
     PinService,
     FileOperationsService,
     TabsService,
@@ -55,7 +55,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
     private directoryNavService: DirectoryNavigatorService,
     private homePageService: HomePageService,
     private configService: PersistentConfigService,
-    private s: HomePageSearchService
   ) {
     this.subscription.add(
       this.homePageService.page$.subscribe((page) => (this.page = page))

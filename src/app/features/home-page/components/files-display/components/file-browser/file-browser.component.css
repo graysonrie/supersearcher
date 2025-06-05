@@ -1,67 +1,66 @@
 :host {
-    display: flex;
-    scrollbar-width: thin;
-    scrollbar-color: var(--input) transparent;
-    flex: 1;
+  display: flex;
+  scrollbar-width: thin;
+  scrollbar-color: var(--input) transparent;
+  flex: 1;
 }
 
 .content {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    flex: 1;
-    overflow-x: hidden;
-    overflow-y: hidden;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 .content .item {
-    margin-right: 1em;
-    margin-left: 1em;
+  margin-right: 1em;
+  margin-left: 1em;
 }
 
-.body-grid{
-    display: grid;
-    width: 100%;
-    height: 100%;
-    grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
-
-    box-sizing: border-box;
+.body-grid {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  /* grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr)); */
+  box-sizing: border-box;
 }
 
 .drag-preview {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: -1000px;
-    /* Hide it off-screen */
-    left: -1000px;
-    pointer-events: none;
-    display: flex;
-    align-items: left;
-    gap: 5px;
-    color: var(--text-primary);
-    background-color: var(--bg-primary);
-    padding: 5px;
-    border-radius: 4px;
-    font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: -1000px;
+  /* Hide it off-screen */
+  left: -1000px;
+  pointer-events: none;
+  display: flex;
+  align-items: left;
+  gap: 5px;
+  color: var(--text-primary);
+  background-color: var(--bg-primary);
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 12px;
 }
 
 .no-files {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
 }
 
 .no-files label {
-    overflow-wrap: anywhere;
-    color: var(--text-muted);
+  overflow-wrap: anywhere;
+  color: var(--text-muted);
 }
 
 app-inline-search-bar {
-    position: absolute;
-    margin: 0.5em;
-    pointer-events: none;
-    z-index: 10;
+  position: absolute;
+  margin: 0.5em;
+  pointer-events: none;
+  z-index: 10;
 }

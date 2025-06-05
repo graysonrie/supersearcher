@@ -18,3 +18,11 @@ export function rangeToLastPeriod(text: string): {
 export const isLetter = (char: string) => {
   return /^[a-zA-Z]$/.test(char);
 };
+
+export function replaceBacklashesWithForwardSlashes(text: string) {
+  return text.replace(/\\/g, "/");
+}
+
+export function removeNonAlphanumericCharacters(text: string) {
+  return text.replace(/[^a-zA-Z0-9\-\/:_]/g, "");
+}

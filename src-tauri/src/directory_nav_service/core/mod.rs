@@ -14,6 +14,7 @@ pub mod files {
         mod file_sorter;
         mod helper;
         pub mod tauri_cmds;
+        pub mod service;
     }
     pub mod user_input_validator {
         pub mod tauri_cmds;
@@ -21,6 +22,7 @@ pub mod files {
     pub mod icons {
         pub mod tauri_cmds;
     }
+    pub mod watcher;
 }
 pub mod drives {
     pub mod tauri_cmds;

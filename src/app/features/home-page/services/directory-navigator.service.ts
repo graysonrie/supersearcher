@@ -14,6 +14,9 @@ import { PersistentConfigService } from "@core/services/persistence/config.servi
 
 @Injectable()
 export class DirectoryNavigatorService {
+  private errorSubject = new BehaviorSubject<string>("");
+  public error$ = this.errorSubject.asObservable();
+
   private currentDirSubject = new BehaviorSubject<string>("");
   public currentDir$ = this.currentDirSubject.asObservable();
 
@@ -47,30 +50,17 @@ export class DirectoryNavigatorService {
         //isAccessible: await this.commandsService.isDirectoryAccessible(dir),
       });
 
+      
+      console.log(`Took ${Date.now() - start} time to get here`);
       const formattedDir = await this.commandsService.formatPathIntoDir(dir);
       this.currentDirSubject.next(formattedDir);
       this.isLoadingSubject.next(true);
 
-      console.log(`Took ${Date.now() - start} time to get here`);
       await this.setFiles(params);
 
       this.isLoadingSubject.next(false);
     }
   }
-
-  /** Load in the files associated with the current directory */
-  // async setFiles(params?: GetFilesParamsDTO) {
-  //   console.log("called set files");
-  //   const directory = this.currentDirSubject.getValue();
-
-  //   if (!params) params = getFilesParams_DefaultParams(); // No sorting logic or anything fancy
-
-  //   const files = await this.commandsService.getFilesAsModels(
-  //     directory,
-  //     params
-  //   );
-  //   this.currentFilesSubject.next(files);
-  // }
 
   async setFiles(params?: GetFilesParamsDTO) {
     console.log("called set files");
@@ -79,16 +69,24 @@ export class DirectoryNavigatorService {
 
     if (!params) params = getFilesParams_DefaultParams(); // No sorting logic or anything fancy
 
-    await this.commandsService.getFilesAsModels(
-      directory,
-      (files) => {
-        this.currentFilesSubject.next([
-          ...this.currentFilesSubject.getValue(),
-          files,
-        ]);
-      },
-      params
-    );
+    // clear the error first:
+    this.errorSubject.next("");
+    // Run the command:
+    await this.commandsService
+      .getFilesAsModels(
+        directory,
+        ({ file, dir }) => {
+          this.currentFilesSubject.next([
+            ...this.currentFilesSubject.getValue(),
+            file,
+          ]);
+        },
+        params
+      ) // * getFilesAsModels will throw an error if the directory is inaccessible to the user
+      .catch((err) => {
+        console.warn("Error when getting files as models:", err);
+        this.errorSubject.next(err);
+      });
   }
 
   async isPathAFile(filePath: string): Promise<boolean> {

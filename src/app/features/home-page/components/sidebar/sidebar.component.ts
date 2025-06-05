@@ -44,7 +44,7 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private directoryNavService: DirectoryNavigatorService,
     private homePageService: HomePageService,
-    private driveService: MockDriveService,
+    private driveService: DriveService,
     private quickAccessService: QuickAccessFilesService
   ) {}
 

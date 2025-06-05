@@ -10,6 +10,7 @@
 
     <ng-template #browserView>
       <app-file-browser
+        *ngIf="!_errorMsg; else error"
         [isLoading]="isLoading"
         (fileClickedOn)="previewFile = $event"
       />
@@ -19,3 +20,9 @@
     <!-- <app-file-preview [file]="previewFile?.FilePath"/> -->
   </div>
 </div>
+
+<ng-template #error>
+  <div class="errorscreen">
+    <p>{{ _errorMsg }}</p>
+  </div>
+</ng-template>

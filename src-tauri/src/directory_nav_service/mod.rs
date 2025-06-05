@@ -10,9 +10,7 @@ mod enums{
 pub mod models {
     pub mod date_range;
 }
-pub mod services{
-    pub mod watcher;
-}
+
 mod core;
 mod util {
     pub mod metadata_inspector;

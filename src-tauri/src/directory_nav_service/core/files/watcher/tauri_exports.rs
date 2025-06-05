@@ -4,11 +4,11 @@ use tauri::{AppHandle, Emitter, State};
 
 /// Returns the emit event identifier string that the frontend can listen with
 #[tauri::command]
-pub fn watch_directory(
+pub async fn watch_directory(
     path: String,
     app_handle: AppHandle,
     watcher_service: State<'_, Arc<DirectoryWatcherService>>,
-) -> String {
+) -> Result<String,()> {
     let path = Path::new(&path);
     let ident = "directory_watcher_event".to_string();
     let ident_clone = ident.clone();
@@ -18,8 +18,8 @@ pub fn watch_directory(
         }
         println!("Directory watcher service backend: noticed changes");
     };
-    watcher_service.watch(path.to_path_buf(), on_changes);
-    ident_clone
+    let _handle = watcher_service.spawn_watch_task(path.to_path_buf(), on_changes).await;
+    Ok(ident_clone)
 }
 
 #[tauri::command]

@@ -37,6 +37,7 @@ export class FilesDisplayComponent implements OnInit, OnDestroy {
   isLoading = false;
   inputControl = new FormControl();
   noFilesMsg = "";
+  _errorMsg = "";
 
   // The file that the user last selected on (clicked)
   previewFile: FileModel | undefined;
@@ -71,6 +72,9 @@ export class FilesDisplayComponent implements OnInit, OnDestroy {
         })
       );
     }
+    this.subscription.add(
+      this.directoryService.error$.subscribe(x=>this._errorMsg=x)
+    );
     this.directoryService.setFiles();
   }
 

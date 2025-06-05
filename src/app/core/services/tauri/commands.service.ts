@@ -15,10 +15,14 @@ import { EmitMetadataModel } from "@core/models/emit-metadata-model";
 import { SystemInfoModel } from "@core/models/system-info-model";
 import { KvSubscriptionModel } from "@core/models/kv-subscription-model";
 import { GetIconDTO } from "@core/dtos/get-icon-dto";
+import {
+  removeNonAlphanumericCharacters,
+  replaceBacklashesWithForwardSlashes,
+} from "@shared/util/string";
 @Injectable({ providedIn: "root" })
 export class TauriCommandsService {
-  private currentFileModelListener: UnlistenFn | null = null;
-  constructor(private safeinvokeService: SafeInvokeService) { }
+
+  constructor(private safeinvokeService: SafeInvokeService) {}
 
   async invokeSafe<T>(
     cmd: string,
@@ -30,26 +34,36 @@ export class TauriCommandsService {
 
   async getFilesAsModels(
     directory: string,
-    onEventEmit: (file: FileModel) => void,
+    onEventEmit: (file: { file: FileModel; dir: string }) => void,
     params: GetFilesParamsDTO
   ) {
     let filesEmitted = 0;
-    const unlisten = await listen<FileModel>("sys_file_model", (event) => {
-      //const model: FileModel = newDefaultFileModel();
-      onEventEmit(event.payload);
-      filesEmitted++;
-    });
+    let directoryIdent = replaceBacklashesWithForwardSlashes(directory);
+    directoryIdent = removeNonAlphanumericCharacters(directoryIdent);
+
+    console.log("Getting files for", directory);
+
+    console.log(directoryIdent);
+    const unlisten = await listen<FileModel>(
+      `sys_file_model`,
+      (event) => {
+        //const model: FileModel = newDefaultFileModel();
+        onEventEmit({ file: event.payload, dir: directory });
+        filesEmitted++;
+      }
+    );
     const start = Date.now();
     try {
-      console.log("Invoked get files")
+      console.log("Invoked get files");
       await this.invokeSafe("get_files_as_models", { directory, params });
     } catch (err) {
       throw new Error(`${err}`);
     } finally {
       unlisten();
+      // Remove the unlisten fn from the list
     }
     console.log(`Files emitted: ${filesEmitted}`);
-    console.log(`Getting files took ${Date.now() - start}ms`)
+    console.log(`Getting files took ${Date.now() - start}ms`);
   }
 
   async formatPathIntoDir(path: string): Promise<string> {
@@ -239,7 +253,7 @@ export class TauriCommandsService {
 
   async addDirsToCrawlerQueue(directories: AddToCrawlerQueueDTO[]) {
     await this.invokeSafe<void>("add_dirs_to_crawler_queue", { directories })
-      .then(() => { })
+      .then(() => {})
       .catch((err) => console.log(err));
     console.log(
       `Frontend validation: added ${directories.length} to the crawler queue`
@@ -314,7 +328,9 @@ export class TauriCommandsService {
    * Returns `true` if the file exists in the file system. If the file does not exist, it is removed from the index.
    */
   async validateFileExists(path: string): Promise<boolean> {
-    return await this.invokeSafe<boolean>("validate_file_exists", { path }).catch((err) => {
+    return await this.invokeSafe<boolean>("validate_file_exists", {
+      path,
+    }).catch((err) => {
       console.log(err);
       return false;
     });
@@ -416,16 +432,12 @@ export class TauriCommandsService {
 
   /** Dispatch the file crawlers if they are not already running */
   async dispatchCrawlers() {
-    await this.invokeSafe<void>(
-      "dispatch_crawlers"
-    );
+    await this.invokeSafe<void>("dispatch_crawlers");
   }
 
   /** Tell the directory watcher to stop watching whatever directory it is watching */
   async watchDirectory(path: string): Promise<string> {
-    return await this.invokeSafe<string>("watch_directory",
-      { path }
-    );
+    return await this.invokeSafe<string>("watch_directory", { path });
   }
 
   /**  The directory watcher can currently only watch one directory at a time, so this function will make it stop watching whatever it is currently watching. */
@@ -434,7 +446,10 @@ export class TauriCommandsService {
   }
 
   /** Get the icon of a file as a base64 encoded string */
-  async getFileIcon(path: string, size: number): Promise<GetIconDTO | undefined> {
+  async getFileIcon(
+    path: string,
+    size: number
+  ): Promise<GetIconDTO | undefined> {
     return await this.invokeSafe<GetIconDTO>("get_file_icon", {
       path,
       width: size,
@@ -446,13 +461,17 @@ export class TauriCommandsService {
   }
 
   async copyPathsToClipboard(paths: string[]) {
-    await this.invokeSafe<void>("copy_paths_to_clipboard", { paths }).catch((err) => {
-      console.error(`Error copying paths to clipboard: ${err}`);
-    });
+    await this.invokeSafe<void>("copy_paths_to_clipboard", { paths }).catch(
+      (err) => {
+        console.error(`Error copying paths to clipboard: ${err}`);
+      }
+    );
   }
 
   async pasteFilesToDirectory(destinationDir: string) {
-    await this.invokeSafe<void>("paste_files_to_directory", { destinationDir }).catch((err) => {
+    await this.invokeSafe<void>("paste_files_to_directory", {
+      destinationDir,
+    }).catch((err) => {
       console.error(`Error pasting files to directory: ${err}`);
     });
   }
@@ -463,13 +482,19 @@ export class TauriCommandsService {
   }
 
   async createNewFile(directory: string, fileName: string) {
-    await this.invokeSafe<void>("create_new_file", { directory, fileName }).catch((err) => {
+    await this.invokeSafe<void>("create_new_file", {
+      directory,
+      fileName,
+    }).catch((err) => {
       console.error(`Error creating new file: ${err}`);
     });
   }
 
   async createNewDirectory(directory: string, directoryName: string) {
-    await this.invokeSafe<void>("create_new_directory", { directory, directoryName }).catch((err) => {
+    await this.invokeSafe<void>("create_new_directory", {
+      directory,
+      directoryName,
+    }).catch((err) => {
       console.error(`Error creating new directory: ${err}`);
     });
   }

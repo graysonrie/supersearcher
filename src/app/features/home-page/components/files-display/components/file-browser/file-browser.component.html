@@ -1,37 +1,33 @@
 <div
   class="content"
-  [@fadeAnimation]="animationState"
   (dragover)="onMainDragOver($event)"
 >
   <app-inline-search-bar />
-
-
-    <cdk-virtual-scroll-viewport
-      itemSize="25"
-      style="height: 100%; width: 100%" class="body-grid"
-    >
-      <div *cdkVirtualFor="let file of files; let i = index" class="item">
-        <app-file-result
-          [file]="file"
-          [state]="states[i]"
-          [viewType]="viewType"
-          [altColor]="i % 2 == 0"
-          [displayPath]="showFullFilePaths"
-          [draggable]="true"
-          (dragstart)="onFileDragStart($event, i, file)"
-          (dragover)="onFileDragOver($event, file)"
-          (drop)="onFileDrop($event, file)"
-          (dragleave)="onFileDragLeave($event, file)"
-          (dragend)="onFileDragEnd($event, file)"
-          [selected]="selectedIndices.has(i)"
-          (click)="onFileClick(i, $event)"
-          (contextmenu)="onFileRightClick(i,$event)"
-          (dblclick)="onFileDoubleClick(file)"
-
-        />
-      </div>
-    </cdk-virtual-scroll-viewport>
-
+  <cdk-virtual-scroll-viewport
+    itemSize="25"
+    style="height: 100%; width: 100%"
+    class="body-grid"
+  >
+    <div *cdkVirtualFor="let file of files; let i = index" class="item">
+      <app-file-result
+        [file]="file"
+        [state]="states[i]"
+        [viewType]="viewType"
+        [altColor]="i % 2 == 0"
+        [displayPath]="showFullFilePaths"
+        [draggable]="true"
+        (dragstart)="onFileDragStart($event, i, file)"
+        (dragover)="onFileDragOver($event, file)"
+        (drop)="onFileDrop($event, file)"
+        (dragleave)="onFileDragLeave($event, file)"
+        (dragend)="onFileDragEnd($event, file)"
+        [selected]="selectedIndices.has(i)"
+        (click)="onFileClick(i, $event)"
+        (contextmenu)="onFileRightClick(i, $event)"
+        (dblclick)="onFileDoubleClick(file)"
+      />
+    </div>
+  </cdk-virtual-scroll-viewport>
 </div>
 
 <!-- The below items are disconnected from the main component's html -->

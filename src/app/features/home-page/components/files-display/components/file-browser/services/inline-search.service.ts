@@ -26,6 +26,11 @@ export class InlineSearchService {
     if (!this.isInputFocused()) {
       const key = filterAlphanumeric(event);
       let input_was_backspace = false;
+
+      if(event.key  == "Escape"){
+        this.clearQuery();
+        return;
+      }
       if (event.key == "Backspace") {
         if (this.searchQuerySubject.getValue().length == 0) {
           return;
@@ -67,6 +72,7 @@ export class InlineSearchService {
 
   clearQuery() {
     this.searchQuerySubject.next("");
+    this.numberOfFoundItemsSubject.next(0);
   }
 
   private isInputFocused(): boolean {
