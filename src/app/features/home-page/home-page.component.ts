@@ -76,7 +76,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
     // };
     // this.s.search(searchParams);
     // TODO: remove. This is just for testintg
-    this.homePageService.setPage("settings");
+    // this.homePageService.setPage("settings");
   }
 
   ngOnDestroy(): void {

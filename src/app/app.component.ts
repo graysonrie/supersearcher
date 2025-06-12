@@ -32,7 +32,8 @@ export class AppComponent implements OnInit {
   async ngOnInit() {
     this.themeService.setTheme("dark-theme");
     if (await this.lifecycleService.isFirstUse()) {
-      await this.configService.update("crawlerSettings", { MaxNumCrawlers: 3 });
+      console.warn("is first use");
+      await this.configService.update("crawlerSettings", { MaxNumCrawlers: 2 });
       await this.configService.update("crawlerWhitelistedExtensions", []);
       await this.configService.update("crawlerDirectoryNamesExclude", [
         "node_modules",

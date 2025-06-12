@@ -37,3 +37,6 @@ p {
 .selector .item.selected {
   background-color: var(--primary);
 }
+.selector .item.selected:hover {
+  border: solid 1px var(--text-primary);
+}

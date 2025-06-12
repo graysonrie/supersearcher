@@ -39,7 +39,7 @@ export class PersistentConfigService {
     fallback: ConfigKeys[K]
   ): Promise<ConfigKeys[K]> {
     const value = await this.read(key);
-    if (value) {
+    if (value != undefined && value != null) {
       return value;
     } else {
       console.warn(`ConfigService - readOrSet notice:

@@ -7,7 +7,12 @@
     <button
       *ngFor="let setting of settings; let i = index"
       class="item"
-      [ngClass]="['item', i == 0 ? 'l' : i == settings.length - 1 ? 'r' : '']"
+      (click)="setIndexingLevel(i)"
+      [ngClass]="{
+        l: i == 0,
+        r: i == settings.length - 1,
+        selected: i == selectedSettingIdx
+      }"
     >
       {{ setting }}
     </button>

@@ -1,3 +1,3 @@
 export interface CrawlerSettingsModel{
-  MaxNumCrawlers:number
+  MaxNumCrawlers:number,
 }
