@@ -1,12 +1,18 @@
 <div class="content" [ngStyle]="{ width: previewWidth + 'px' }">
-  
   <div class="scroll-region">
-    <app-button-w-icon
+    <!-- <app-button-w-icon
       iconName="home"
       (click)="homeButtonClicked()"
       iconSize="1.2rem"
     >
       Home
+    </app-button-w-icon> -->
+    <app-button-w-icon
+      iconName="gear"
+      (click)="settingsButtonClicked()"
+      iconSize="1.2rem"
+    >
+      Settings
     </app-button-w-icon>
 
     <div class="divider"></div>
@@ -28,9 +34,9 @@
       </div>
     </div>
     <div class="divider"></div>
-</div>
+  </div>
 
   <app-extend-bar-vertical [minWidth]="30" [startingWidth]="200" />
 </div>
 
-    <app-info-box/>
+<app-info-box />

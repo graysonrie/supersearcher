@@ -1,0 +1,39 @@
+p {
+  margin: 0px;
+}
+.icon {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.selector {
+  display: flex;
+  padding: 0.5rem;
+}
+
+.selector .item {
+  display: flex;
+  border: solid 1px var(--input);
+  padding: 0.5rem;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease-in-out;
+}
+
+.selector .item.l {
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+.selector .item.r {
+  border-top-right-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+}
+.selector .item:hover {
+  border: solid 1px var(--primary);
+}
+.selector .item.selected {
+  background-color: var(--primary);
+}

@@ -28,7 +28,7 @@ impl CrawlerQueueTable {
         // Prepare raw SQL for upsert
         let query = r#"
             INSERT INTO crawler_queue (path, priority, taken, added_at)
-            VALUES (?, ?, ?, ?) 
+            VALUES (?, ?, ?, ?)
             ON CONFLICT(path) DO UPDATE SET
                 priority = excluded.priority,
                 taken = excluded.taken,

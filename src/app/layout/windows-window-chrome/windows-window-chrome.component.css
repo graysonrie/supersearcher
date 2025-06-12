@@ -1,49 +1,53 @@
 .window-chrome {
-    position:  absolute;
-    display: flex;
-    align-items: center;
-    height: 30px;
-    width: 100%;
-    box-sizing: border-box;
-    justify-content: space-between;
-    /* background-color: var(--bg-light); */
-    color: var(--text-primary);
+  position: absolute;
+  display: flex;
+  align-items: center;
+  height: 30px;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: space-between;
+  /* background-color: var(--bg-light); */
+  color: var(--text-primary);
+  pointer-events: none;
 }
 
 .title-bar {
-    flex: 1;
-    height: 100%;
-    -webkit-app-region: drag;
-    display: flex;
-    align-items: center;
-    z-index: -10;
+  flex: 1;
+  height: 100%;
+  -webkit-app-region: drag;
+  display: flex;
+  align-items: center;
+  pointer-events: auto;
 }
 
 .window-controls {
-    z-index: 10;
-    display: flex;
-    height: 100%;
-    pointer-events: all !important;
+  z-index: 10;
+  display: flex;
+  height: 100%;
+  pointer-events: auto;
+  -webkit-app-region: no-drag;
 }
 
 .window-controls button {
-    display: flex;
-    font-size: 1.6em;
-    width: 48px;
-    height: 100%;
-    border: none;
-    cursor: pointer;
-    -webkit-app-region: no-drag;
-    align-items: center;
-    justify-content: center;
-    transition: all .1s ease;
+  display: flex;
+  font-size: 1.6em;
+  width: 48px;
+  height: 100%;
+  border: none;
+  cursor: pointer;
+  -webkit-app-region: no-drag;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.1s ease;
+  pointer-events: auto;
 }
 
-.maximize:hover, .minimize:hover {
-    background-color: var(--select-primary);
+.maximize:hover,
+.minimize:hover {
+  background-color: var(--select-primary);
 }
 
 .close:hover {
-    color: white;
-    background-color: rgb(224, 0, 0);
+  color: white;
+  background-color: rgb(224, 0, 0);
 }

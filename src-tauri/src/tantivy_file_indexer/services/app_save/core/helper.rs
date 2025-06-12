@@ -1,10 +1,7 @@
 use std::{
-    fs::{self, File},
+    fs::{self},
     path::{Path, PathBuf},
 };
-
-use serde::{de::DeserializeOwned, Serialize};
-use serde_json::{from_reader, to_writer};
 
 pub fn get_file_path(app_path: &Path, file: &str) -> PathBuf {
     let new_path = app_path.join(file);
@@ -27,25 +24,13 @@ pub fn create_file(app_path: &Path, path: &str) -> PathBuf {
     new_path
 }
 
-pub fn save<T>(app_path: &Path, name: &str, data: T) -> Result<(), std::io::Error>
-where
-    T: Serialize,
-{
-    let path = get_file_path(app_path, &format!("{}.json", name));
-    let file = File::create(path)?;
-    to_writer(file, &data)?;
-    Ok(())
-}
+/// Will completely erase the file at the location if it already exists and create a new one
+pub fn create_or_overwrite_file(app_path: &Path, path: &str) -> PathBuf {
+    let new_path = get_file_path(app_path, path);
 
-/**
- * Note: do not include '.json' when you pass in a value for `name`
- */
-pub fn load<T>(app_path: &Path, name: &str) -> Result<T, std::io::Error>
-where
-    T: DeserializeOwned,
-{
-    let path = get_file_path(app_path, format!("{}.json", name).as_str());
-    let file = File::open(path)?;
-    let data: T = from_reader(file)?;
-    Ok(data)
+    if let Some(parent) = Path::new(&new_path).parent() {
+        fs::create_dir_all(parent).expect("failed to create directories");
+    }
+    fs::File::create(&new_path).expect("failed to create or overwrite file");
+    new_path
 }

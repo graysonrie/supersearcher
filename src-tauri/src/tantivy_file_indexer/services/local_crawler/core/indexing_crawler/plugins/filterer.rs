@@ -4,7 +4,8 @@ use serde::{de::DeserializeOwned, Serialize};
 
 use crate::tantivy_file_indexer::{
     models::auto_serializing_value::AutoSerializingValue,
-    services::local_db::tables::app_kv_store::api::AppKvStoreTable, util::string,
+    services::local_db::tables::app_kv_store::api::AppKvStoreTable,
+    util::{path::get_path_components, string},
 };
 
 pub enum ShouldIndexResult {
@@ -48,29 +49,32 @@ impl FiltererPlugin {
         )
         .await;
 
-        match dir_path.file_name() {
-            Some(name) => {
-                let path_str = name.to_string_lossy().to_lowercase();
-
-                if self.exclude_dirs_starting_with_period.get_data().await
-                    && path_str.starts_with('.')
-                {
-                    return false;
-                }
-
-                !self
-                    .dir_names_exclude
-                    .get_data()
-                    .await
-                    .iter()
-                    .any(|exclude| path_str.contains(exclude))
-            }
-            None =>
-            // Example: C:// returns `None` here, and you have to crawl this directory, so return true
-            {
-                true
-            }
+        let path_components = get_path_components(dir_path);
+        if path_components.is_empty() {
+            println!(
+                "WARNING: found empty path components from dir path: {}. How does that work?",
+                dir_path.to_string_lossy()
+            );
+            return false;
         }
+        let last_path_component = path_components
+            .last()
+            .expect("Path components should be verified to not be empty.");
+
+        if self.exclude_dirs_starting_with_period.get_data().await
+            && last_path_component.starts_with('.')
+        {
+            return false;
+        }
+
+        let dir_names_exclude = self.dir_names_exclude.get_data().await;
+
+        // ! Note that we need to call to_lowercase() to ensure case insensitivity
+        !path_components.iter().any(|comp| {
+            dir_names_exclude
+                .iter()
+                .any(|exclude| comp.to_lowercase().contains(&exclude.to_lowercase()))
+        })
     }
 
     pub async fn should_index(&self, path: &Path) -> ShouldIndexResult {

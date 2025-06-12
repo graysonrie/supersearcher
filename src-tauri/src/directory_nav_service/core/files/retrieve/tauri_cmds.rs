@@ -10,6 +10,5 @@ pub async fn get_files_as_models(
     retriever: State<'_, Arc<FileRetrieverService>>,
 ) -> Result<(), String> {
     retriever.run_get_files_as_models(directory, params).await;
-    retriever.get_files_task.wait_until_complete().await;
     Ok(())
 }

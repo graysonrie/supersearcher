@@ -4,7 +4,9 @@ use chrono::Utc;
 use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
 use sqlx::{Sqlite, Transaction};
 
-use crate::tantivy_file_indexer::services::local_db::table_creator::generate_table_lenient;
+use crate::tantivy_file_indexer::services::local_db::{
+    table_creator::generate_table_lenient,
+};
 
 use super::entities::recently_indexed_dir;
 

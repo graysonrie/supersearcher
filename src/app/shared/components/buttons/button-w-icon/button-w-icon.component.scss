@@ -9,10 +9,12 @@
   overflow: hidden;
   justify-content: left;
   justify-content: center;
-  transition: all .2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  // ! Important for allowing the pointer events to pass through from the window chrome
+  -webkit-app-region: no-drag;
 }
 
-.content:hover{
+.content:hover {
   background-color: var(--select);
 }
 

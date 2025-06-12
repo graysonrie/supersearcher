@@ -1,0 +1,15 @@
+<div class="container">
+  <div class="icon">
+    <iconify-icon icon="bug" />
+    <p>Indexing Level</p>
+  </div>
+  <div class="selector">
+    <button
+      *ngFor="let setting of settings; let i = index"
+      class="item"
+      [ngClass]="['item', i == 0 ? 'l' : i == settings.length - 1 ? 'r' : '']"
+    >
+      {{ setting }}
+    </button>
+  </div>
+</div>

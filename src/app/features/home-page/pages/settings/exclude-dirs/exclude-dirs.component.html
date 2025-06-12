@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="icon setting-title">
+    <iconify-icon icon="close" />
+    <p><b>Exclude Directories</b>:</p>
+  </div>
+  <div class="exclude-dirs-container">
+    <div
+      class="top-box"
+      *ngIf="directoryNamesToExclude$ | async as directoryNamesToExclude"
+    >
+      <div *ngFor="let dir of directoryNamesToExclude" class="item">
+        <div class="icon">
+          <iconify-icon
+            icon="drive"
+            *ngIf="isDiskDrive(dir); else directoryIcon"
+          />
+          <p>{{ dir }}</p>
+        </div>
+        <button class="trash-button" (click)="removeDirectory(dir)">
+          <iconify-icon icon="trash" />
+        </button>
+      </div>
+      <div
+        *ngFor="let pendingDir of _pendingDirectoriesToAdd; let i = index"
+        class="item"
+      >
+        <div class="icon">
+          <iconify-icon
+            icon="drive"
+            *ngIf="isDiskDrive(pendingDir.value); else directoryIcon"
+          />
+          <input
+            type="text"
+            [formControl]="pendingDir"
+            class="directory-input"
+            #directoryInput
+            (blur)="onInputBlur(pendingDir)"
+            (keydown)="onInputKeydown($event, pendingDir)"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="options" (click)="addPendingDirectory()">
+      <app-button-w-icon iconName="plus"> Add Directory </app-button-w-icon>
+    </div>
+  </div>
+</div>
+
+<ng-template #directoryIcon>
+  <iconify-icon icon="folder" />
+</ng-template>

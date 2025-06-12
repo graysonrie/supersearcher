@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { DriveService } from "@core/services/files/drive.service";
 import { DriveModel } from "@core/models/drive-model";
 import { CommonModule } from "@angular/common";
@@ -27,8 +33,8 @@ import { MockDriveService } from "./mock-drives.service";
     QuickAccessShortcutComponent,
     ExtendBarVerticalComponent,
     ButtonWIconComponent,
-    InfoBoxComponent
-],
+    InfoBoxComponent,
+  ],
   templateUrl: "./sidebar.component.html",
   styleUrl: "./sidebar.component.scss",
 })
@@ -67,6 +73,10 @@ export class SidebarComponent implements OnInit, AfterViewInit, OnDestroy {
   homeButtonClicked() {
     this.directoryNavService.setCurrentDir("Home");
     this.toMainPage();
+  }
+
+  settingsButtonClicked() {
+    this.homePageService.setPage("settings");
   }
 
   driveClicked(drive: DriveModel) {

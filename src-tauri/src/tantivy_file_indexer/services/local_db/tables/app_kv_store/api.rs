@@ -204,4 +204,17 @@ impl AppKvStoreTable {
     pub async fn tauri_subscribe_to_key(&self, key: &str) -> String {
         self.tauri_subscriptions.add_subscription(key).await
     }
+
+    /// Returns the version of the app. If the version key is not present, None is returned
+    pub async fn get_app_version(&self) -> Result<String, VersionErr> {
+        self.get("version")
+            .await
+            .map_err(VersionErr::DbErr)?
+            .map_or_else(|| Err(VersionErr::VersionKeyNotPresentErr), Ok)
+    }
+}
+
+pub enum VersionErr {
+    VersionKeyNotPresentErr,
+    DbErr(String),
 }

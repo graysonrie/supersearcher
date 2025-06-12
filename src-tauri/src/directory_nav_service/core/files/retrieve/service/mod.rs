@@ -36,6 +36,9 @@ impl FileRetrieverService {
                 println!("Error when getting files as models: {}", err);
             }
         }));
+        if let Err(e) = _handle.await {
+            println!("Get files handle error: {}", e);
+        }
     }
 }
 

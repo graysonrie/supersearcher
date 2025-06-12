@@ -32,7 +32,7 @@ import { Subscription } from "rxjs";
     DirectoryNavigatorService,
     DirectoryHistoryService,
     // TODO: disable if being bad
-    // DirectoryWatcherService, 
+    // DirectoryWatcherService,
     PinService,
     FileOperationsService,
     TabsService,
@@ -54,7 +54,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   constructor(
     private directoryNavService: DirectoryNavigatorService,
     private homePageService: HomePageService,
-    private configService: PersistentConfigService,
+    private configService: PersistentConfigService
   ) {
     this.subscription.add(
       this.homePageService.page$.subscribe((page) => (this.page = page))
@@ -75,6 +75,8 @@ export class HomePageComponent implements OnInit, OnDestroy {
     //   FilePath: "file",
     // };
     // this.s.search(searchParams);
+    // TODO: remove. This is just for testintg
+    this.homePageService.setPage("settings");
   }
 
   ngOnDestroy(): void {

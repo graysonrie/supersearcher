@@ -1,5 +1,5 @@
 pub mod service_container;
-mod enums{
+mod enums {
     pub mod search_query_type;
 }
 mod dtos {
@@ -15,10 +15,11 @@ pub mod services {
 }
 mod models {
     pub mod auto_serializing_value;
-    pub mod vector_search_params_model;
     pub mod emit_metadata_model;
+    pub mod vector_search_params_model;
 }
-mod util{
+mod util {
+    pub mod path;
     pub mod string;
 }
 pub mod shared;

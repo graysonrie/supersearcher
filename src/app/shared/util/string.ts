@@ -19,6 +19,15 @@ export const isLetter = (char: string) => {
   return /^[a-zA-Z]$/.test(char);
 };
 
+/**
+ *
+ * @param path
+ * @returns true if the second character in the string is a colon
+ */
+export function isADiskDrive(path: string) {
+  return path.charAt(1) == ":";
+}
+
 export function replaceBacklashesWithForwardSlashes(text: string) {
   return text.replace(/\\/g, "/");
 }

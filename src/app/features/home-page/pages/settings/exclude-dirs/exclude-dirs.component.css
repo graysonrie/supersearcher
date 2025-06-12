@@ -1,0 +1,95 @@
+.container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+}
+
+h1 {
+  font-size: 1.5rem;
+  font-family: "Poppins";
+  margin: 0px;
+  padding: 0px;
+}
+
+h2 {
+  font-size: 1rem;
+  font-family: "Poppins";
+  margin: 0px;
+  padding: 0px;
+}
+
+.exclude-dirs-container .top-box {
+  border: 1px solid var(--input);
+  padding: 0.5rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  border-bottom-right-radius: 0px;
+
+  border-bottom-left-radius: 0px;
+}
+.exclude-dirs-container .options {
+  border: 1px solid var(--input);
+  padding: 0.5rem;
+  border-radius: 1rem;
+  border-top-right-radius: 0px;
+
+  border-top-left-radius: 0px;
+}
+.exclude-dirs-container .item {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  border-radius: 0.4rem;
+  padding: 0.2rem;
+  justify-content: space-between;
+}
+
+.exclude-dirs-container .item:hover {
+  background-color: var(--select);
+}
+.exclude-dirs-container .trash-button {
+  border: 0px;
+}
+
+.exclude-dirs-container .trash-button:hover {
+  border: 0px;
+  color: red;
+}
+
+.divider {
+  display: block;
+  border-radius: 10px;
+  height: 2px;
+  width: 100%;
+  background-color: var(--input);
+}
+
+.icon {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.setting-title {
+  padding-bottom: 0.5rem;
+}
+p {
+  margin: 0px;
+}
+
+.directory-input {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-size: .8rem;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  outline: none;
+}
+
+.directory-input:focus {
+  border-bottom: 1px solid var(--text-primary);
+}

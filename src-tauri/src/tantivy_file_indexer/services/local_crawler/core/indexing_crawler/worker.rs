@@ -97,7 +97,9 @@ where
                     Some(file) => {
                         if let Some(filterer) = &self.filterer {
                             if !filterer.should_crawl_directory(&file.path).await {
-                                println!("File Crawler - Filterer recommends not crawling directory: {}. Skipping it.",file.path.to_string_lossy());
+                                // ! Removed the log as it can be annoying sometimes
+                                // println!("File Crawler - Filterer recommends not crawling directory: {}. Skipping it.",file.path.to_string_lossy());
+
                                 // Fetched a directory that shouldn't be crawled:
                                 // Example: 'node_modules'
                                 self.remove_from_crawler_queue(&file).await;

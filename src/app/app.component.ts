@@ -7,6 +7,7 @@ import { WindowsWindowChromeComponent } from "./layout/windows-window-chrome/win
 import { TauriCommandsService } from "@core/services/tauri/commands.service";
 import { PersistentConfigService } from "@core/services/persistence/config.service";
 import { AddToCrawlerQueueDTO } from "@core/dtos/add-to-crawler-queue-dto";
+import { TauriLifecycleService } from "@core/services/tauri/lifecycle.service";
 
 @Component({
   selector: "app-root",
@@ -24,23 +25,28 @@ export class AppComponent implements OnInit {
   constructor(
     private commandsService: TauriCommandsService,
     private configService: PersistentConfigService,
-    private themeService: ColorThemeService
+    private themeService: ColorThemeService,
+    private lifecycleService: TauriLifecycleService
   ) {}
 
   async ngOnInit() {
     this.themeService.setTheme("dark-theme");
-    await this.configService.update("crawlerSettings", { MaxNumCrawlers: 3 });
-    await this.configService.update("crawlerWhitelistedExtensions", []);
-    await this.configService.update("crawlerDirectoryNamesExclude", [
-      "node_modules",
-      "Program Files",
-      "Windows",
-    ]);
-    const d: AddToCrawlerQueueDTO = {
-      DirPath: "C:\\",
-      Priority: 5,
-    };
-    await this.commandsService.addDirsToCrawlerQueue([d]);
+    if (await this.lifecycleService.isFirstUse()) {
+      await this.configService.update("crawlerSettings", { MaxNumCrawlers: 3 });
+      await this.configService.update("crawlerWhitelistedExtensions", []);
+      await this.configService.update("crawlerDirectoryNamesExclude", [
+        "node_modules",
+        "Program Files",
+        "ProgramData",
+        "AppData",
+        "Windows",
+      ]);
+      const d: AddToCrawlerQueueDTO = {
+        DirPath: "C:\\",
+        Priority: 5,
+      };
+      await this.commandsService.addDirsToCrawlerQueue([d]);
+    }
     await this.commandsService.dispatchCrawlers();
   }
 }
