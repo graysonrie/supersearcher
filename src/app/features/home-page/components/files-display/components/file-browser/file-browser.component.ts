@@ -1,16 +1,12 @@
 import {
   Component,
-  ElementRef,
   EventEmitter,
   HostListener,
-  Inject,
   Input,
   NgZone,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
   ViewChild,
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -39,8 +35,8 @@ import { FailedToMoveItemsPopupComponent } from "./popups/generic-err-popup/gene
 import { FilesListService } from "../../services/files-list.service";
 import { FileState } from "../../../file-result/file-state";
 import { MoveItemsPopupStateService } from "./popups/move-items-popup/move-items-popup-state.service";
-import { HomePageService } from "src/app/features/home-page/services/home-page.service";
 import { FileViewType } from "../../../file-result/enums/view-type";
+import { DirectoryNavigatorService } from "src/app/features/home-page/services/directory-navigator.service";
 
 /** Files are passed in via an instance of a `FilesListService` */
 @Component({
@@ -97,8 +93,14 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
 
   private debounceTimer: any = null;
 
+  // Add trackBy function for virtual scroll optimization
+  trackByFn(index: number, item: FileModel): string {
+    return item.FilePath;
+  }
+
   constructor(
     private inlineSearchService: InlineSearchService,
+    private directoryNavService: DirectoryNavigatorService,
     private filesListService: FilesListService,
     private dragService: DragDropService,
     private selectService: SelectService,
@@ -107,18 +109,34 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     private ngZone: NgZone
   ) {}
 
+  private checkViewportCounter = 0;
   ngOnInit(): void {
     if (this.viewType != FileViewType.Detail) this._arrangeFilesAsGrid = true;
 
     this.subscription.add(
       this.filesListService.observeAllFiles().subscribe((x) => {
-        if (this.allowFadeIn) {
+        if (
+          this.allowFadeIn &&
+          (this.files.length === 0 ||
+            Math.abs(this.files.length - x.length) > 10)
+        ) {
           this.hideAndFadeIn();
-        } else {
-          this.viewport.checkViewportSize();
         }
-        this.selectService.clearSelection();
         this.files = x;
+
+        this.checkViewportCounter++;
+        if (this.checkViewportCounter > 4) {
+          this.ngZone.run(() => {
+            this.viewport.checkViewportSize();
+          });
+        }
+      })
+    );
+
+    this.subscription.add(
+      this.directoryNavService.currentDir$.subscribe((_) => {
+        // Clear the selected range whenever we enter a new directory
+        this.selectService.clearSelection();
       })
     );
 
@@ -186,17 +204,22 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     const state = this.states[index];
     this.fileClickedOn.emit(this.files[index]);
     this.selectService.onFileClick(index, event);
-    this.selectService.setLastSelectedItemState({model,state});
+    this.selectService.setLastSelectedItemState({ model, state });
   }
 
   onFileRightClick(index: number, event: MouseEvent) {
-    if(this.selectedIndices.has(index)) {
+    if (this.selectedIndices.has(index)) {
       const indices = Array.from(this.selectedIndices);
-      const files = indices.map(x=>this.files[x]);
-      const states = indices.map(x=>this.states[x]);
+      const files = indices.map((x) => this.files[x]);
+      const states = indices.map((x) => this.states[x]);
       this.contextMenuService.openMenu(this.contextMenu, event, files, states);
     } else {
-      this.contextMenuService.openMenu(this.contextMenu, event, [this.files[index]], [this.states[index]]);
+      this.contextMenuService.openMenu(
+        this.contextMenu,
+        event,
+        [this.files[index]],
+        [this.states[index]]
+      );
     }
   }
 
@@ -234,7 +257,9 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     if (this.dragService.draggingItemsToADirectory) {
       if (this.dragService.numFilesAwaitingDrop > 0) {
         // If the popup doesn't get opened, it means the user disabled it
-        this.moveItemsPopupState.setItemsAdding(this.dragService.numFilesAwaitingDrop);
+        this.moveItemsPopupState.setItemsAdding(
+          this.dragService.numFilesAwaitingDrop
+        );
         if (!this.moveItemsPopupState.attemptOpen()) {
           await this.dragService.moveDraggedItemsAsync();
         }

@@ -15,10 +15,11 @@ export interface ConfigKeys {
   quickAccessFiles: string[];
   lastDirectoryAt: string;
 
-  crawlerDirectoryNamesExclude:string[],
+  crawlerExcludeDirectoriesStartingWithPeriod: boolean;
+  crawlerDirectoryNamesExclude: string[];
   /** NOTE: The extensions should not have a leading dot */
-  crawlerWhitelistedExtensions:string[],
+  crawlerWhitelistedExtensions: string[];
   /** NOTE: The extensions should not have a leading dot */
-  crawlerBlacklistedExtensions:string[],
-  crawlerSettings:CrawlerSettingsModel,
+  crawlerBlacklistedExtensions: string[];
+  crawlerSettings: CrawlerSettingsModel;
 }

@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   ViewChild,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { FileViewType } from "./enums/view-type";
 import { CommonModule } from "@angular/common";
@@ -39,6 +40,7 @@ import { IndexedDirModel } from "@core/models/indexed-dir-model";
   styleUrl: "./file-result.component.scss",
   animations: [],
   providers: [FileContextMenuService],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FileResultComponent implements OnInit, DoCheck {
   _isIconType = false;
@@ -52,7 +54,7 @@ export class FileResultComponent implements OnInit, DoCheck {
 
   get shouldGrow() {
     // * checking for mouse over here seems to be redundant
-    return (this.state.draggedOver /*|| this.mouseOver*/) && !this.state.hide;
+    return this.state.draggedOver /*|| this.mouseOver*/ && !this.state.hide;
   }
 
   @Input() file: FileModel | undefined;

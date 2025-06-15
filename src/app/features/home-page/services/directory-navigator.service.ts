@@ -40,7 +40,6 @@ export class DirectoryNavigatorService {
   async setCurrentDir(dir: string, params?: GetFilesParamsDTO) {
     // avoid redundant emissions
     if (this.currentDirSubject.getValue() !== dir) {
-      const start = Date.now();
       // Ensure that the config is updated:
       await this.configService.update("lastDirectoryAt", dir);
 
@@ -50,15 +49,15 @@ export class DirectoryNavigatorService {
         //isAccessible: await this.commandsService.isDirectoryAccessible(dir),
       });
 
-      
-      console.log(`Took ${Date.now() - start} time to get here`);
       const formattedDir = await this.commandsService.formatPathIntoDir(dir);
       this.currentDirSubject.next(formattedDir);
       this.isLoadingSubject.next(true);
 
+      const start = Date.now();
       await this.setFiles(params);
 
       this.isLoadingSubject.next(false);
+      console.log(`Took ${Date.now() - start} time to get here`);
     }
   }
 

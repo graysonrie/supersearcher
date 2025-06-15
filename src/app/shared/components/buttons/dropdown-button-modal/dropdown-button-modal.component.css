@@ -35,7 +35,7 @@
 }
 
 .content:hover {
-  background-color: var(--select-primary);
+  background-color: var(--select);
 }
 
 .content-wrapper {

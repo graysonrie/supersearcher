@@ -8,8 +8,6 @@ import {
   ViewChild,
 } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
-import { DirectoryHistoryService } from "src/app/features/home-page/services/directory-history.service";
-
 import { PinnedFilesHeaderComponent } from "./pinned-files-header/pinned-files-header.component";
 import { TabsHolderComponent } from "./tabs-holder/tabs-holder.component";
 
@@ -20,8 +18,6 @@ import {
 } from "./util-button/util-button.component";
 import { CurrentDirectoryBarComponent } from "./current-directory-bar/current-directory-bar.component";
 import { IconifyIconModule } from "@shared/components/icons/IconifyIcons/icon.module";
-import { SearchbarComponent } from "../../../searchbar/searchbar.component";
-import { DirectoryNavigatorService } from "src/app/features/home-page/services/directory-navigator.service";
 import { checkOverflow } from "@shared/util/element-overflow-checker";
 
 @Component({

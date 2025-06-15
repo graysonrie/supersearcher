@@ -42,6 +42,7 @@ export class AppComponent implements OnInit {
         "AppData",
         "Windows",
       ]);
+      await this.configService.update("crawlerExcludeDirectoriesStartingWithPeriod",true)
       const d: AddToCrawlerQueueDTO = {
         DirPath: "C:\\",
         Priority: 5,
