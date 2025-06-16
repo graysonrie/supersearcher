@@ -21,7 +21,6 @@ import {
 } from "@shared/util/string";
 @Injectable({ providedIn: "root" })
 export class TauriCommandsService {
-
   constructor(private safeinvokeService: SafeInvokeService) {}
 
   async invokeSafe<T>(
@@ -34,36 +33,27 @@ export class TauriCommandsService {
 
   async getFilesAsModels(
     directory: string,
-    onEventEmit: (file: { file: FileModel; dir: string }) => void,
     params: GetFilesParamsDTO
   ) {
-    let filesEmitted = 0;
     let directoryIdent = replaceBacklashesWithForwardSlashes(directory);
     directoryIdent = removeNonAlphanumericCharacters(directoryIdent);
 
     console.log("Getting files for", directory);
 
     console.log(directoryIdent);
-    const unlisten = await listen<FileModel>(
-      `sys_file_model`,
-      (event) => {
-        //const model: FileModel = newDefaultFileModel();
-        onEventEmit({ file: event.payload, dir: directory });
-        filesEmitted++;
-      }
-    );
+
     const start = Date.now();
     try {
       console.log("Invoked get files");
       await this.invokeSafe("get_files_as_models", { directory, params });
     } catch (err) {
       throw new Error(`${err}`);
-    } finally {
-      unlisten();
-      // Remove the unlisten fn from the list
     }
-    console.log(`Files emitted: ${filesEmitted}`);
     console.log(`Getting files took ${Date.now() - start}ms`);
+  }
+
+  async requestGetFilesCancel() {
+    await this.safeinvokeService.invokeSafe<void>("request_get_files_cancel");
   }
 
   async formatPathIntoDir(path: string): Promise<string> {

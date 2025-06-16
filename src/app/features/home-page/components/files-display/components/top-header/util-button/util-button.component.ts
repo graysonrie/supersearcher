@@ -64,21 +64,20 @@ export class UtilButtonComponent implements OnInit, OnDestroy {
   constructor(
     private selectService: SelectService,
     private directoryService: DirectoryNavigatorService,
-    private directoryHistoryService: DirectoryHistoryService,
+    private directoryHistoryService: DirectoryHistoryService
   ) {}
 
   @Input() type: UtilButtonType = "copy";
 
   get utilityName(): string {
-    if(this.type=='navigateBack') return 'Up';
+    if (this.type == "navigateBack") return "Up";
     return capitalizeFirstLetter(this.type);
   }
 
   ngOnInit(): void {
     if (this.type == "new") this._isDropdownType = true;
 
-    if(this.type == "navigateBack") this._alwaysActive = true;
-
+    if (this.type == "navigateBack") this._alwaysActive = true;
 
     this._icon = this.type;
 
@@ -130,6 +129,7 @@ export class UtilButtonComponent implements OnInit, OnDestroy {
 
   async navigateBackAction() {
     let parent = await this.directoryService.getParentDirectory();
+    console.log("goind bac");
     await this.directoryService.setCurrentDir(parent);
   }
 
@@ -146,16 +146,16 @@ export class UtilButtonComponent implements OnInit, OnDestroy {
     this.directoryHistoryService.redo();
   }
 
-  private checkIfUsable(){
-    if(this._alwaysActive) {
+  private checkIfUsable() {
+    if (this._alwaysActive) {
       this._isUsable = true;
       return;
     }
-    if(this.type == "redo") {
+    if (this.type == "redo") {
       this._isUsable = this._redoStackLen > 0;
       return;
     }
-    if(this.type == "undo") {
+    if (this.type == "undo") {
       this._isUsable = this._undoStackLen > 0;
       return;
     }

@@ -12,3 +12,11 @@ pub async fn get_files_as_models(
     retriever.run_get_files_as_models(directory, params).await;
     Ok(())
 }
+
+#[tauri::command]
+pub async fn request_get_files_cancel(
+    retriever: State<'_, Arc<FileRetrieverService>>,
+) -> Result<(), String> {
+    retriever.get_files_task.cancel().await;
+    Ok(())
+}

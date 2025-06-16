@@ -10,8 +10,6 @@ use crate::{
     shared::models::sys_file_model::SystemFileModel,
 };
 
-use super::helper;
-
 /** Where the `PathBuf` in the closure represents the current path getting read */
 pub fn read_files_incremental<F>(
     dir_path: &Path,
@@ -26,19 +24,6 @@ where
         for_each_file(path);
     }
     Ok(())
-}
-
-/// Read the directory and output the files all at once (this function doesn't emit anything)
-pub fn read_files_and_process(dir_path: &Path) -> Result<Vec<SystemFileModel>, std::io::Error> {
-    let mut file_models = Vec::new();
-    let read = fs::read_dir(dir_path)?;
-    for entry in read.flatten() {
-        let path = entry.path();
-        if let Some(model) = helper::create_file_model_from_path(path) {
-            file_models.push(model)
-        }
-    }
-    Ok(file_models)
 }
 
 /** Whether or not the file meets the criteria specified in the parameters */

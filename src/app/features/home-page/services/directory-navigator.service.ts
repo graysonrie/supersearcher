@@ -1,5 +1,5 @@
-import { Injectable } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { EventEmitter, Injectable, OnDestroy, Output } from "@angular/core";
+import { BehaviorSubject, Subscription, takeUntil, switchMap } from "rxjs";
 import {
   getFilesParams_DefaultParams,
   GetFilesParamsDTO,
@@ -11,14 +11,20 @@ import {
   newDirMetadataDefault,
 } from "@core/models/directory-metadata";
 import { PersistentConfigService } from "@core/services/persistence/config.service";
+import { FileRetrieverService } from "@core/services/files/file-retriever.service";
+import { Session } from "@core/models/session";
+import { replaceBacklashesWithForwardSlashes } from "@shared/util/string";
 
 @Injectable()
-export class DirectoryNavigatorService {
+export class DirectoryNavigatorService implements OnDestroy {
+  private subscription = new Subscription();
+
   private errorSubject = new BehaviorSubject<string>("");
   public error$ = this.errorSubject.asObservable();
 
   private currentDirSubject = new BehaviorSubject<string>("");
   public currentDir$ = this.currentDirSubject.asObservable();
+  private currentDirAsIdent: string = "";
 
   private currentDirMetadataSubject = new BehaviorSubject<DirectoryMetadata>(
     newDirMetadataDefault()
@@ -33,13 +39,22 @@ export class DirectoryNavigatorService {
   public currentFiles$ = this.currentFilesSubject.asObservable();
 
   constructor(
+    private fileRetrieverService: FileRetrieverService,
     private commandsService: TauriCommandsService,
     private configService: PersistentConfigService
-  ) {}
+  ) {
+    this.subscription.add(
+      this.currentDir$.subscribe(
+        (x) => (this.currentDirAsIdent = replaceBacklashesWithForwardSlashes(x))
+      )
+    );
+  }
 
   async setCurrentDir(dir: string, params?: GetFilesParamsDTO) {
     // avoid redundant emissions
     if (this.currentDirSubject.getValue() !== dir) {
+      console.log("requested cancel");
+      await this.commandsService.requestGetFilesCancel();
       // Ensure that the config is updated:
       await this.configService.update("lastDirectoryAt", dir);
 
@@ -54,14 +69,40 @@ export class DirectoryNavigatorService {
       this.isLoadingSubject.next(true);
 
       const start = Date.now();
-      await this.setFiles(params);
+      const observable = await this.setFilesAndObserve(params);
+      this.subscription.add(
+        observable
+          .pipe(
+            switchMap((session) => session.inactive$),
+            takeUntil(this.currentDir$)
+          )
+          .subscribe((inactive) => {
+            if (!inactive) {
+              const session = observable.getValue();
+              if (session.directory !== this.currentDirAsIdent) {
+                this.fileRetrieverService.removeSession(session.directory);
+              } else {
+                session.inactiveSubject.next(true);
+              }
+            }
+          })
+      );
+
+      this.subscription.add(
+        observable.subscribe((session) => {
+          if (session.directory === this.currentDirAsIdent) {
+            this.currentFilesSubject.next(session.files);
+          }
+        })
+      );
 
       this.isLoadingSubject.next(false);
+
       console.log(`Took ${Date.now() - start} time to get here`);
     }
   }
 
-  async setFiles(params?: GetFilesParamsDTO) {
+  async setFilesAndObserve(params?: GetFilesParamsDTO) {
     console.log("called set files");
     this.currentFilesSubject.next([]);
     const directory = this.currentDirSubject.getValue();
@@ -70,22 +111,12 @@ export class DirectoryNavigatorService {
 
     // clear the error first:
     this.errorSubject.next("");
-    // Run the command:
-    await this.commandsService
-      .getFilesAsModels(
-        directory,
-        ({ file, dir }) => {
-          this.currentFilesSubject.next([
-            ...this.currentFilesSubject.getValue(),
-            file,
-          ]);
-        },
-        params
-      ) // * getFilesAsModels will throw an error if the directory is inaccessible to the user
-      .catch((err) => {
-        console.warn("Error when getting files as models:", err);
-        this.errorSubject.next(err);
-      });
+
+    const observable = this.fileRetrieverService.getFilesAndObserveSession(
+      directory,
+      params
+    );
+    return observable;
   }
 
   async isPathAFile(filePath: string): Promise<boolean> {
@@ -116,5 +147,9 @@ export class DirectoryNavigatorService {
 
   getCurrentMetadata(): DirectoryMetadata {
     return this.currentDirMetadataSubject.getValue();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 }

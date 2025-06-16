@@ -4,6 +4,7 @@
     itemSize="25"
     style="height: 100%; width: 100%"
     class="body-grid"
+    *ngIf="files.length > 0; else noFiles"
   >
     <div *cdkVirtualFor="let file of files; let i = index" class="item">
       <app-file-result
@@ -32,3 +33,9 @@
 <app-move-items-popup #moveItemsPopup />
 
 <app-generic-err-popup #genericErrPopup />
+
+<ng-template #noFiles>
+  <div class="no-files">
+    <label>{{_noFilesMsg}}</label>
+  </div>
+</ng-template>

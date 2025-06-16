@@ -2,13 +2,10 @@ use std::sync::Arc;
 use tauri::{AppHandle, Emitter, State};
 
 use crate::{
-    shared::models::sys_file_model::SystemFileModel,
-    tantivy_file_indexer::{
-        dtos::{
+    shared::models::{emit_metadata_model::EmitMetadataModel, sys_file_model::SystemFileModel},
+    tantivy_file_indexer::dtos::{
             search_params_dto::SearchParamsDTO, streaming_search_dto::StreamingSearchParamsDTO,
         },
-        models::emit_metadata_model::EmitMetadataModel,
-    },
 };
 
 use super::{service::SearchIndexService, services::task_manager::TaskManagerService};

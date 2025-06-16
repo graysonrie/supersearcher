@@ -14,8 +14,8 @@ pub mod files {
         mod file_sorter;
         mod helper;
         mod models;
-        pub mod tauri_cmds;
         pub mod service;
+        pub mod tauri_cmds;
     }
     pub mod user_input_validator {
         pub mod tauri_cmds;

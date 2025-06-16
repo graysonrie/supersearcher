@@ -68,14 +68,13 @@ export class FilesDisplayComponent implements OnInit, OnDestroy {
     if (this.watcherService) {
       this.subscription.add(
         this.watcherService.directoryChanges$.subscribe(() => {
-          this.directoryService.setFiles();
+          // this.directoryService.setCurrentDir();
         })
       );
     }
     this.subscription.add(
       this.directoryService.error$.subscribe(x=>this._errorMsg=x)
     );
-    this.directoryService.setFiles();
   }
 
   onClick() {

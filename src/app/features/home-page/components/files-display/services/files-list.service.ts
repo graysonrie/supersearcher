@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Output } from "@angular/core";
 import { defaultFileState, FileState } from "../../file-result/file-state";
 import { BehaviorSubject, Observable } from "rxjs";
 import { FileModel } from "@core/models/file-model";
@@ -62,8 +62,8 @@ export class FilesListService {
 
   /** Emit the current snapshot of the fileStates map */
   private emitFileStates() {
-    let states:FileState[] = [];
-    this.fileStates.forEach((stateSubject, _) =>{
+    let states: FileState[] = [];
+    this.fileStates.forEach((stateSubject, _) => {
       states.push(stateSubject.value);
     });
     this.statesSubject.next(states);

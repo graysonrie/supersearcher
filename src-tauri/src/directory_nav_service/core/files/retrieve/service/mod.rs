@@ -4,16 +4,18 @@ use tauri::{AppHandle, Emitter};
 
 use crate::{
     directory_nav_service::{
-        core::files::retrieve::{file_retriever, helper},
+        core::files::retrieve::{file_retriever, helper, models::Session},
         dtos::get_files_dtos::GetFilesParamsDTO,
     },
-    shared::models::sys_file_model::SystemFileModel,
+    shared::models::{emit_metadata_model::EmitMetadataModel, sys_file_model::SystemFileModel},
     tantivy_file_indexer::shared::cancel_task::CancellableTask,
 };
 
 pub struct FileRetrieverService {
     app_handle: AppHandle,
     pub get_files_task: CancellableTask,
+    // TODO: implement
+    pub sessions: Vec<Session>,
 }
 
 impl FileRetrieverService {
@@ -21,6 +23,7 @@ impl FileRetrieverService {
         Self {
             app_handle,
             get_files_task: CancellableTask::new(),
+            sessions: Vec::new(),
         }
     }
     pub async fn run_get_files_as_models(&self, directory: String, params: GetFilesParamsDTO) {
@@ -35,9 +38,6 @@ impl FileRetrieverService {
                 println!("Error when getting files as models: {}", err);
             }
         }));
-        if let Err(e) = _handle.await {
-            println!("Get files handle error: {}", e);
-        }
     }
 }
 
@@ -53,25 +53,10 @@ async fn get_files_as_models(
 ) -> Result<i32, String> {
     let path = Path::new(&directory);
     let dir_ident = dir_to_ident(&directory);
+    let dir_ident = remove_non_alphanumeric(&dir_ident);
 
     // TODO: implement sort logic
-    // match params.sort_by {
-    //     Some(ref sort_params) => {
-    //         // Files can't be output as we get to them, they must be preprocessed first
-    //         let files =
-    //             file_retriever::read_files_and_process(path).map_err(|err| err.to_string())?;
-    //         let mut filtered: Vec<SystemFileModel> = files
-    //             .into_iter()
-    //             .filter(|file| file_retriever::should_include_file(file, &params))
-    //             .collect();
-    //         // Now we can sort the files:
-    //         file_sorter::sort_files(&mut filtered, sort_params);
-    //         for model in filtered.iter() {
-    //             emit_file(&app_handle, model);
-    //         }
-    //     }
-    //     None => {
-    // Output files as we get to them
+
     let mut num_files = 0;
     file_retriever::read_files_incremental(path, |fp| {
         if let Some(model) = helper::create_file_model_from_path(fp) {
@@ -82,16 +67,16 @@ async fn get_files_as_models(
         }
     })
     .map_err(|err| err.to_string())?;
-    //     }
-    // }
 
     Ok(num_files)
 }
 
-fn emit_file(handle: &AppHandle, file: &SystemFileModel, directory_ident: &str) {
-    let ident = "sys_file_model";
+fn emit_file(handle: &AppHandle, file: &SystemFileModel, session_ident: &str) {
+    // Ident used to be "sys_file_model"
+    let event_name = "file_retriever:file";
+    let emit_model = EmitMetadataModel::new(file, session_ident);
 
-    handle.emit(&ident, &file).unwrap_or_default();
+    handle.emit(event_name, &emit_model).unwrap_or_default();
 }
 
 fn remove_non_alphanumeric(ident: &str) -> String {
