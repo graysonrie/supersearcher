@@ -1,6 +1,8 @@
 use std::{
     fs,
+    future::Future,
     path::{Path, PathBuf},
+    pin::Pin,
 };
 
 use crate::{
@@ -9,8 +11,6 @@ use crate::{
     },
     shared::models::sys_file_model::SystemFileModel,
 };
-
-use super::helper;
 
 /** Where the `PathBuf` in the closure represents the current path getting read */
 pub fn read_files_incremental<F>(
@@ -28,17 +28,20 @@ where
     Ok(())
 }
 
-/// Read the directory and output the files all at once (this function doesn't emit anything)
-pub fn read_files_and_process(dir_path: &Path) -> Result<Vec<SystemFileModel>, std::io::Error> {
-    let mut file_models = Vec::new();
+/** Where the `PathBuf` in the closure represents the current path getting read */
+pub async fn read_files_incremental_async<F, Fut>(
+    dir_path: &Path,
+    mut for_each_file: F,
+) -> Result<(), std::io::Error>
+where
+    F: FnMut(PathBuf) -> Pin<Box<dyn Future<Output = Fut> + Send + 'static>>,
+{
     let read = fs::read_dir(dir_path)?;
     for entry in read.flatten() {
         let path = entry.path();
-        if let Some(model) = helper::create_file_model_from_path(path) {
-            file_models.push(model)
-        }
+        for_each_file(path).await;
     }
-    Ok(file_models)
+    Ok(())
 }
 
 /** Whether or not the file meets the criteria specified in the parameters */
@@ -71,8 +74,8 @@ pub fn should_include_file(file: &SystemFileModel, params: &GetFilesParamsDTO) -
                 }
             }
         }
-        if let Some(files_only) = sort_params.files_only{
-            if (file.is_dir() && files_only) ||  (!file.is_dir() && !files_only){
+        if let Some(files_only) = sort_params.files_only {
+            if (file.is_dir() && files_only) || (!file.is_dir() && !files_only) {
                 return false;
             }
         }

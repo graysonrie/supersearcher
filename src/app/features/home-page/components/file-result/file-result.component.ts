@@ -22,6 +22,7 @@ import { rangeToLastPeriod } from "@shared/util/string";
 import { FileIconComponent } from "../file-icon/file-icon.component";
 import { IndexingFilesOverlayService } from "../indexing-files-overlay/indexing-files-overlay.service";
 import { IndexedDirModel } from "@core/models/indexed-dir-model";
+import { animate, style, transition, trigger } from "@angular/animations";
 // If you are looking for the drag functionality, it gets handled by the parent component
 // 'files-display' for example
 
@@ -38,7 +39,17 @@ import { IndexedDirModel } from "@core/models/indexed-dir-model";
   ],
   templateUrl: "./file-result.component.html",
   styleUrl: "./file-result.component.scss",
-  animations: [],
+  animations: [
+    trigger("fadeIn", [
+      transition("* => *", [
+        style({ opacity: 0, transform: "translateX(-20px)" }),
+        animate(
+          "300ms ease-out",
+          style({ opacity: 1, transform: "translateX(0)" })
+        ),
+      ]),
+    ]),
+  ],
   providers: [FileContextMenuService],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -62,6 +73,7 @@ export class FileResultComponent implements OnInit, DoCheck {
   /** If the file's name is longer than the max text length, then it will be truncated */
   @Input() maxTextLength?: number;
 
+  @Input() doAnimate = true;
   @Input() selected = false;
   @Input() displayPath = false;
   @Input() altColor = false;
@@ -179,5 +191,11 @@ export class FileResultComponent implements OnInit, DoCheck {
 
   isFileBeingIndexed(indexedFiles: any[]): boolean {
     return indexedFiles.some((x) => x.Path === this.file?.FilePath);
+  }
+
+  get animationState(): string {
+    if (!this.file || !this.doAnimate) return "void";
+    // Create a unique state based on the file's data
+    return `${this.file.FilePath}-${this.file.Name}-${this.file.IsDirectory}`;
   }
 }

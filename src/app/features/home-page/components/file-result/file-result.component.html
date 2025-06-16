@@ -9,6 +9,7 @@
         hide: state.hide,
         altcolor: altColor && !selected && !_isIconType
       }"
+      [@fadeIn]="animationState"
     >
       <div class="body" [ngClass]="{ icon: _isIconType }">
         <div *ngIf="isPinned">

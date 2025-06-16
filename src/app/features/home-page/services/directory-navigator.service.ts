@@ -54,6 +54,9 @@ export class DirectoryNavigatorService {
       this.isLoadingSubject.next(true);
 
       const start = Date.now();
+      this.currentFilesSubject.next([]);
+      // Arbitrary wait to prevents the get_files_at_models events from being emitting at the wrong places
+      await new Promise((resolve) => setTimeout(resolve, 100));
       await this.setFiles(params);
 
       this.isLoadingSubject.next(false);
@@ -75,13 +78,29 @@ export class DirectoryNavigatorService {
       .getFilesAsModels(
         directory,
         ({ file, dir }) => {
-          this.currentFilesSubject.next([
-            ...this.currentFilesSubject.getValue(),
-            file,
-          ]);
+          if (dir == this.currentDirSubject.getValue()) {
+            this.currentFilesSubject.next([
+              ...this.currentFilesSubject.getValue(),
+              file,
+            ]);
+          } else {
+            console.error("NOO");
+          }
         },
         params
       ) // * getFilesAsModels will throw an error if the directory is inaccessible to the user
+      .then(async () => {
+        const currentDir = this.currentDirSubject.getValue();
+        if (this.currentFilesSubject.getValue().length == 0) {
+          if (await this.commandsService.isDirectoryAccessible(currentDir)) {
+            this.errorSubject.next("This directory is empty.");
+          } else {
+            this.errorSubject.next(
+              `Could not access '${currentDir}': Access denied.`
+            );
+          }
+        }
+      })
       .catch((err) => {
         console.warn("Error when getting files as models:", err);
         this.errorSubject.next(err);

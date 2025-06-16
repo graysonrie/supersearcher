@@ -1,4 +1,7 @@
-use std::{os::windows::fs::MetadataExt, path::{Path, PathBuf}};
+use std::{
+    os::windows::fs::MetadataExt,
+    path::{Path, PathBuf},
+};
 
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
@@ -20,14 +23,32 @@ pub struct SystemFileModel {
 }
 
 impl SystemFileModel {
-    pub fn try_new_from_meta(path: PathBuf, meta: &std::fs::Metadata) -> Result<Self,String> {
+    pub fn try_new_from_meta(path: PathBuf, meta: &std::fs::Metadata) -> Result<Self, String> {
         let size = meta.file_size();
 
-        let date_modified =
-            system_time_to_chrono_datetime(meta.modified().map_err(|err| err.to_string())?);
+        let date_modified_raw = meta.modified().map_err(|err| err.to_string())?;
+        let date_modified = match system_time_to_chrono_datetime(date_modified_raw) {
+            Ok(time) => time,
+            Err(err) => {
+                println!(
+                    "Could not get date modified. Provided time: {:?}. Error: {:?}. Returning the crappy unix epoch as a fallback",
+                    date_modified_raw, err
+                );
+                chrono::DateTime::UNIX_EPOCH
+            }
+        };
 
-        let date_created =
-            system_time_to_chrono_datetime(meta.created().map_err(|err| err.to_string())?);
+        let date_created_raw = meta.created().map_err(|err| err.to_string())?;
+        let date_created = match system_time_to_chrono_datetime(date_created_raw) {
+            Ok(time) => time,
+            Err(err) => {
+                println!(
+                    "Could not get date created. Provided time: {:?}. Error: {:?}. Returning Date Modified instead, even though that makes no sense",
+                    date_created_raw, err
+                );
+                date_modified
+            }
+        };
 
         let name = path
             .file_name()
@@ -48,12 +69,12 @@ impl SystemFileModel {
         Ok(model)
     }
 
-    pub fn get_ext(&self)->Option<String>{
+    pub fn get_ext(&self) -> Option<String> {
         let path = Path::new(&self.file_path);
-        path.extension().map(|x|x.to_string_lossy().to_string())
+        path.extension().map(|x| x.to_string_lossy().to_string())
     }
 
-    pub fn is_dir(&self)->bool{
+    pub fn is_dir(&self) -> bool {
         let path = Path::new(&self.file_path);
         path.is_dir()
     }

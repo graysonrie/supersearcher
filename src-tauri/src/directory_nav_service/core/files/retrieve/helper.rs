@@ -20,7 +20,7 @@ pub fn create_file_model_from_path(file_path: PathBuf) -> Option<SystemFileModel
                 date_modified,
                 date_created,
                 size,
-                score: 0.0, 
+                score: 0.0,
                 is_directory,
             })
         }
@@ -33,9 +33,12 @@ pub fn create_file_model_from_path(file_path: PathBuf) -> Option<SystemFileModel
 
 fn sys_date_to_chrono(date: std::io::Result<SystemTime>) -> chrono::DateTime<Utc> {
     match date {
-        Ok(date) => system_time_to_chrono_datetime(date),
+        Ok(sys_time) => system_time_to_chrono_datetime(sys_time).expect(&format!(
+            "Error converting system time to chrono time. Given time: {:?}",
+            date.unwrap()
+        )),
         Err(err) => {
-            println!("Error accessing date on file: {}", err);
+            println!("Error accessing date kn file: {}", err);
             chrono::Utc::now()
         }
     }

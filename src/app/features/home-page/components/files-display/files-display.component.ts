@@ -3,7 +3,15 @@ import { FileBrowserComponent } from "./components/file-browser/file-browser.com
 import { FormControl } from "@angular/forms";
 import { FileModel } from "@core/models/file-model";
 import { FilePreviewComponent } from "./components/file-preview/file-preview.component";
-import { Observable, Subscription } from "rxjs";
+import {
+  Observable,
+  Subscription,
+  of,
+  bufferTime,
+  concatMap,
+  delay,
+  map,
+} from "rxjs";
 import { FilesListService } from "./services/files-list.service";
 import { CommonModule } from "@angular/common";
 import { DirectoryNavigatorService } from "../../services/directory-navigator.service";
@@ -55,9 +63,11 @@ export class FilesDisplayComponent implements OnInit, OnDestroy {
         this.filesListService.setFiles(files);
       })
     );
+
     this.subscription.add(
       this.directoryService.isLoading$.subscribe((x) => (this.isLoading = x))
     );
+
     this.subscription.add(
       this.directoryService.currentDir$.subscribe(async (dir) => {
         this._isOnHomePage = dir === "Home";
@@ -65,6 +75,7 @@ export class FilesDisplayComponent implements OnInit, OnDestroy {
         if (this.watcherService) this.watcherService.watchDirectory(dir);
       })
     );
+
     if (this.watcherService) {
       this.subscription.add(
         this.watcherService.directoryChanges$.subscribe(() => {
@@ -72,9 +83,11 @@ export class FilesDisplayComponent implements OnInit, OnDestroy {
         })
       );
     }
+
     this.subscription.add(
-      this.directoryService.error$.subscribe(x=>this._errorMsg=x)
+      this.directoryService.error$.subscribe((x) => (this._errorMsg = x))
     );
+
     this.directoryService.setFiles();
   }
 

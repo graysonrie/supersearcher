@@ -1,21 +1,21 @@
 use serde::{Deserialize, Serialize};
 use super::super::models::date_range::DateRange;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "lowercase")] 
 pub enum OldestNewest {
     Oldest,
     Newest,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone)]
 #[serde(rename_all = "lowercase")] 
 pub enum LargestSmallest {
     Largest,
     Smallest,
 }
 
-#[derive(Deserialize, Serialize)]
+#[derive(Deserialize, Serialize, Clone)]
 #[serde(rename_all = "PascalCase")]
 pub struct SortFilesByDTO{
     pub date_modified_range: Option<DateRange>,

@@ -76,6 +76,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   @ViewChild("contextMenu") contextMenu!: ContextMenuComponent;
 
   _arrangeFilesAsGrid = false;
+
   files: FileModel[] = [];
   states: FileState[] = [];
 
@@ -115,16 +116,13 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
 
     this.subscription.add(
       this.filesListService.observeAllFiles().subscribe((x) => {
-        if (
-          this.allowFadeIn &&
-          (this.files.length === 0 ||
-            Math.abs(this.files.length - x.length) > 10)
-        ) {
+        if (this.allowFadeIn) {
           this.hideAndFadeIn();
         }
         this.files = x;
 
         this.checkViewportCounter++;
+        // Ensures that the scrollviewer updates immediately rather than only rendering after all of the files are done being piped in
         if (this.checkViewportCounter > 4) {
           this.ngZone.run(() => {
             this.viewport.checkViewportSize();
@@ -141,9 +139,9 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     );
 
     this.subscription.add(
-      this.filesListService
-        .observeAllStates()
-        .subscribe((x) => (this.states = x))
+      this.filesListService.observeAllStates().subscribe((x) => {
+        this.states = x;
+      })
     );
 
     this.subscription.add(

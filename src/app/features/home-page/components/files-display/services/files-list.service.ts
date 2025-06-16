@@ -62,8 +62,8 @@ export class FilesListService {
 
   /** Emit the current snapshot of the fileStates map */
   private emitFileStates() {
-    let states:FileState[] = [];
-    this.fileStates.forEach((stateSubject, _) =>{
+    let states: FileState[] = [];
+    this.fileStates.forEach((stateSubject, _) => {
       states.push(stateSubject.value);
     });
     this.statesSubject.next(states);
