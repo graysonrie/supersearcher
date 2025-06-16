@@ -13,6 +13,7 @@ pub mod files {
         mod file_retriever;
         mod file_sorter;
         mod helper;
+        mod models;
         pub mod tauri_cmds;
         pub mod service;
     }

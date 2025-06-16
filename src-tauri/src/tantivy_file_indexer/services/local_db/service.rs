@@ -10,8 +10,6 @@ use sea_orm::{ConnectionTrait, DatabaseConnection, Statement};
 use sqlx::sqlite::SqlitePool;
 use tauri::AppHandle;
 
-const DB_NAME: &str = "file_index.db";
-
 pub struct LocalDbService {
     connection: Arc<DatabaseConnection>,
     recently_indexed_dirs_table: RecentlyIndexedDirectoriesTable,

@@ -1,7 +1,6 @@
-use std::{future::Future, path::Path, sync::Arc};
+use std::path::Path;
 
 use tauri::{AppHandle, Emitter};
-use tokio::sync::RwLock;
 
 use crate::{
     directory_nav_service::{
