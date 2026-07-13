@@ -51,6 +51,10 @@ impl CrawlerQueueTable {
         Ok(())
     }
 
+    pub async fn get_all(&self) -> Result<Vec<indexed_dir::Model>, sea_orm::DbErr> {
+        indexed_dir::Entity::find().all(&*self.db).await
+    }
+
     /// Completely removes the given models from the database
     ///
     /// Returns the number of items that were deleted

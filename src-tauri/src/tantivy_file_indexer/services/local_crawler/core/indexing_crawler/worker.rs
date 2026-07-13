@@ -7,7 +7,10 @@ use crate::{
     tantivy_file_indexer::{
         services::local_crawler::core::indexing_crawler::{
             idle,
-            plugins::{FiltererPlugin, GarbageCollectorPlugin, ThrottleAmount, ThrottlePlugin},
+            plugins::{
+                FiltererPlugin, GarbageCollectorPlugin, ThrottleAmount, ThrottlePlugin,
+                WhitelisterPlugin,
+            },
         },
         shared::{
             async_retry,
@@ -40,6 +43,7 @@ where
 
     garbage_collector: Option<Arc<GarbageCollectorPlugin>>,
     filterer: Option<Arc<FiltererPlugin>>,
+    whitelister: Option<Arc<WhitelisterPlugin>>,
     throttle: ThrottlePlugin,
 }
 
@@ -66,6 +70,7 @@ where
 
             garbage_collector: None,
             filterer: None,
+            whitelister: None,
             throttle: ThrottlePlugin::new(),
         }
     }
@@ -76,6 +81,10 @@ where
 
     pub fn inject_filterer(&mut self, f: Arc<FiltererPlugin>) {
         self.filterer = Some(f);
+    }
+
+    pub fn inject_whitelister(&mut self, w: Arc<WhitelisterPlugin>) {
+        self.whitelister = Some(w);
     }
 
     pub fn set_throttle<T>(&mut self, t: T)
@@ -91,6 +100,10 @@ where
 
         self.random_wait().await;
         loop {
+            if let Some(whitelister) = &self.whitelister {
+                whitelister.handle_config_refresh().await;
+            }
+
             // Since not every directory will have a lot of files, save up a bunch of files and then commit all of them
             match self.staggered_fetch_next().await {
                 Ok(file_option) => match file_option {
@@ -107,7 +120,22 @@ where
                             }
                         }
 
+                        if let Some(whitelister) = &self.whitelister {
+                            if !whitelister.is_allowed(&file.path).await {
+                                self.remove_from_crawler_queue(&file).await;
+                                continue;
+                            }
+                        }
+
                         let inner_files = self.handle_crawl(&file).await;
+
+                        if let Some(whitelister) = &self.whitelister {
+                            if !whitelister.is_allowed(&file.path).await {
+                                self.remove_from_crawler_queue(&file).await;
+                                continue;
+                            }
+                        }
+
                         let len = inner_files.len();
                         num_files_processed += len;
                         //println!("Crawler processed {} files", len);
@@ -135,7 +163,10 @@ where
                         // stagger the update since multiple crawlers may finish at the same time
                         self.random_wait().await;
                         let queue_clone = Arc::clone(&self.crawler_queue);
-                        if let Err(err) = idle::create_busy_work(queue_clone).await {
+                        let whitelister_clone = self.whitelister.clone();
+                        if let Err(err) =
+                            idle::create_busy_work(queue_clone, whitelister_clone).await
+                        {
                             println!("Crawler Worker - Error creating busy work: {}", err);
                         }
                     }
@@ -226,7 +257,15 @@ where
         C: CrawlerQueueApi,
     {
         let filterer_clone = self.filterer.clone();
-        match crawler::crawl(directory, Arc::clone(&self.crawler_queue), filterer_clone).await {
+        let whitelister_clone = self.whitelister.clone();
+        match crawler::crawl(
+            directory,
+            Arc::clone(&self.crawler_queue),
+            filterer_clone,
+            whitelister_clone,
+        )
+        .await
+        {
             Ok(dtos) => {
                 return dtos;
             }
@@ -260,7 +299,13 @@ where
             return files;
         }
         for (dir, inner_files) in files.drain(..) {
-            //println!("Draining {}", dir.path.to_string_lossy());
+            if let Some(whitelister) = &self.whitelister {
+                if !whitelister.is_allowed(&dir.path).await {
+                    self.remove_from_crawler_queue(&dir).await;
+                    continue;
+                }
+            }
+
             self.handle_index_batched(&dir, inner_files).await;
         }
         files

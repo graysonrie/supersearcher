@@ -1,5 +1,5 @@
 use crate::tantivy_file_indexer::services::local_crawler::core::indexing_crawler::plugins::{
-    FiltererPlugin, GarbageCollectorPlugin,
+    FiltererPlugin, GarbageCollectorPlugin, WhitelisterPlugin,
 };
 use crate::tantivy_file_indexer::services::local_db::service::LocalDbService;
 use crate::tantivy_file_indexer::services::search_index::service::SearchIndexService;
@@ -18,6 +18,7 @@ pub struct FileCrawlerService {
     has_dispatched_crawlers: RwLock<bool>,
 
     queue: Arc<CrawlerQueue>,
+    whitelister: Arc<WhitelisterPlugin>,
     search_index: Arc<SearchIndexService>,
     local_db_service: Arc<LocalDbService>,
 }
@@ -28,9 +29,15 @@ impl FileCrawlerService {
         search_index: Arc<SearchIndexService>,
     ) -> Self {
         let queue = Arc::new(CrawlerQueue::new(Arc::clone(&local_db_service)));
+        let whitelister = Arc::new(WhitelisterPlugin::new(
+            local_db_service.kv_store_table().clone(),
+            Arc::clone(&queue),
+        ));
+
         Self {
             has_dispatched_crawlers: RwLock::new(false),
             queue,
+            whitelister,
             search_index: Arc::clone(&search_index),
             local_db_service,
         }
@@ -65,7 +72,10 @@ impl FileCrawlerService {
 
         let factory = factory::IndexingCrawlersFactory::new(crawler_queue, pipeline)
             .set_garbage_collector(collector)
-            .set_filterer(filterer);
+            .set_filterer(filterer)
+            .set_whitelister(Arc::clone(&self.whitelister));
+
+        self.whitelister.on_whitelist_config_updated().await;
 
         // Hand off the rest of the building to the task manager
         // Currently the only way this can fail is if the DB can't be accessed since the crawler settings need to be retrieved
@@ -73,7 +83,18 @@ impl FileCrawlerService {
         Ok(())
     }
 
+    pub fn whitelister(&self) -> Arc<WhitelisterPlugin> {
+        Arc::clone(&self.whitelister)
+    }
+
     pub async fn push_dirs(&self, paths: Vec<(PathBuf, Priority)>) {
+        self.whitelister.on_whitelist_config_updated().await;
+        let paths = self.whitelister.filter_entries(&paths).await;
+
+        if paths.is_empty() {
+            return;
+        }
+
         if let Err(err) = async_retry::retry_with_backoff(
             |_| self.queue.push_many(&paths),
             4,

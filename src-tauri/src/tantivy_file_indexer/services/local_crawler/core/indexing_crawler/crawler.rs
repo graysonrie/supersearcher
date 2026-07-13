@@ -5,9 +5,14 @@ use tokio::fs::ReadDir;
 
 use crate::{
     shared::models::sys_file_model::SystemFileModel,
-    tantivy_file_indexer::{services::local_crawler::core::indexing_crawler::plugins::FiltererPlugin, shared::indexing_crawler::{
-        models::crawler_file::CrawlerFile, traits::crawler_queue_api::CrawlerQueueApi,
-    }},
+    tantivy_file_indexer::{
+        services::local_crawler::core::indexing_crawler::plugins::{
+            FiltererPlugin, WhitelisterPlugin,
+        },
+        shared::indexing_crawler::{
+            models::crawler_file::CrawlerFile, traits::crawler_queue_api::CrawlerQueueApi,
+        },
+    },
 };
 
 use super::plugins::{filterer::ShouldIndexResult};
@@ -23,8 +28,8 @@ pub enum CrawlerError {
 pub async fn crawl<C>(
     file: &CrawlerFile,
     queue: Arc<C>,
-
     filterer: Option<Arc<FiltererPlugin>>,
+    whitelister: Option<Arc<WhitelisterPlugin>>,
 ) -> Result<Vec<SystemFileModel>, CrawlerError>
 where
     C: CrawlerQueueApi,
@@ -86,11 +91,33 @@ where
             }
         }
     }
+
     if !dir_paths_found.is_empty() {
-        queue
-            .push(&dir_paths_found)
-            .await
-            .map_err(|err| CrawlerError::PushToQueue(err.to_string()))?;
+        let mut entries: Vec<(PathBuf, u32)> = dir_paths_found
+            .iter()
+            .map(|entry| (entry.path.clone(), entry.priority))
+            .collect();
+
+        if let Some(whitelister) = &whitelister {
+            entries = whitelister.filter_entries(&entries).await;
+        }
+
+        if !entries.is_empty() {
+            let filtered_files: Vec<CrawlerFile> = entries
+                .into_iter()
+                .map(|(path, priority)| CrawlerFile {
+                    path,
+                    priority,
+                    taken: false,
+                    added_at: Utc::now(),
+                })
+                .collect();
+
+            queue
+                .push(&filtered_files)
+                .await
+                .map_err(|err| CrawlerError::PushToQueue(err.to_string()))?;
+        }
     }
 
     Ok(dtos)

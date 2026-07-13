@@ -50,6 +50,10 @@ impl CrawlerQueue {
             .map(|_| ())
     }
 
+    pub async fn get_all(&self) -> Result<Vec<indexed_dir::Model>, DbErr> {
+        self.get_crawler_queue_table().get_all().await
+    }
+
     pub async fn set_taken_to_false_all(&self) -> Result<(), DbErr> {
         self.get_crawler_queue_table().mark_all_as_not_taken().await
     }

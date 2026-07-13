@@ -1,14 +1,13 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
   "productName": "Super Searcher",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "identifier": "com.super-searcher.app",
   "build": {
     "beforeDevCommand": "yarn start",
     "devUrl": "http://localhost:1420",
     "beforeBuildCommand": "yarn build",
     "frontendDist": "../dist/desktop-search/browser"
-
   },
   "app": {
     "windows": [

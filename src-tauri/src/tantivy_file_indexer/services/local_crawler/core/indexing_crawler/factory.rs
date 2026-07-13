@@ -7,6 +7,7 @@ use crate::{
     tantivy_file_indexer::{
         services::local_crawler::core::indexing_crawler::plugins::{
             FiltererPlugin, GarbageCollectorPlugin, ThrottleAmount, ThrottlePlugin,
+            WhitelisterPlugin,
         },
         shared::indexing_crawler::traits::{
             commit_pipeline::CrawlerCommitPipeline, crawler_queue_api::CrawlerQueueApi,
@@ -24,6 +25,7 @@ where
     worker_batch_size: usize,
     garbage_collector: Option<Arc<GarbageCollectorPlugin>>,
     filterer: Option<Arc<FiltererPlugin>>,
+    whitelister: Option<Arc<WhitelisterPlugin>>,
     throttle: ThrottlePlugin,
 }
 
@@ -39,6 +41,7 @@ where
             worker_batch_size: 512,
             garbage_collector: None,
             filterer: None,
+            whitelister: None,
             throttle: ThrottlePlugin::new(),
         }
     }
@@ -52,6 +55,10 @@ where
     }
     pub fn set_filterer(mut self, f: Arc<FiltererPlugin>) -> Self {
         self.filterer = Some(f);
+        self
+    }
+    pub fn set_whitelister(mut self, w: Arc<WhitelisterPlugin>) -> Self {
+        self.whitelister = Some(w);
         self
     }
     pub fn set_throttle(&mut self, t: ThrottleAmount) -> &Self {
@@ -88,6 +95,12 @@ where
             if let Some(f) = &self.filterer {
                 let filterer = Arc::clone(f);
                 worker.inject_filterer(filterer);
+            }
+
+            // Inject a whitelister if there is one
+            if let Some(w) = &self.whitelister {
+                let whitelister = Arc::clone(w);
+                worker.inject_whitelister(whitelister);
             }
 
             // Inject a throttle
