@@ -28,7 +28,7 @@ h2 {
   padding: 0px;
 }
 
-.exclude-dirs-container .top-box {
+.include-dirs-container .top-box {
   border: 1px solid var(--input);
   padding: 0.5rem;
   border-radius: 1rem;
@@ -39,7 +39,7 @@ h2 {
 
   border-bottom-left-radius: 0px;
 }
-.exclude-dirs-container .options {
+.include-dirs-container .options {
   border: 1px solid var(--input);
   padding: 0.5rem;
   border-radius: 1rem;
@@ -47,7 +47,7 @@ h2 {
 
   border-top-left-radius: 0px;
 }
-.exclude-dirs-container .item {
+.include-dirs-container .item {
   display: flex;
   gap: 0.5rem;
   width: 100%;
@@ -56,14 +56,14 @@ h2 {
   justify-content: space-between;
 }
 
-.exclude-dirs-container .item:hover {
+.include-dirs-container .item:hover {
   background-color: var(--select);
 }
-.exclude-dirs-container .trash-button {
+.include-dirs-container .trash-button {
   border: 0px;
 }
 
-.exclude-dirs-container .trash-button:hover {
+.include-dirs-container .trash-button:hover {
   border: 0px;
   color: red;
 }
@@ -102,3 +102,4 @@ p {
 .directory-input:focus {
   border-bottom: 1px solid var(--text-primary);
 }
+

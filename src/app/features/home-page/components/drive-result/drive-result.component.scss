@@ -1,0 +1,9 @@
+.content.whitelisted ::ng-deep .content {
+  color: var(--primary);
+  border-left-color: var(--primary);
+}
+
+.content.muted ::ng-deep .content {
+  color: var(--text-muted);
+  border-left-color: var(--text-muted);
+}

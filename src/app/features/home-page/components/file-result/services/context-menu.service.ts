@@ -4,38 +4,39 @@ import { FileModel } from "@core/models/file-model";
 import { PinService } from "src/app/features/home-page/services/pin.service";
 import { TauriCommandsService } from "@core/services/tauri/commands.service";
 import { FileState } from "../file-state";
+import { ContextMenuButton } from "@shared/components/popups/context-menu/models/ContextMenuButton";
 
 @Injectable()
 export class FileContextMenuService {
   constructor(
     private pinService: PinService,
-    private commandsService: TauriCommandsService
-  ) { }
+    private commandsService: TauriCommandsService,
+  ) {}
 
   openMenu(
     menu: ContextMenuComponent,
     event: MouseEvent,
     callers: FileModel[],
-    states?: FileState[]
+    states?: FileState[],
   ) {
     event.preventDefault();
 
-    let content: any[] = [];
+    let content: ContextMenuButton[] = [];
     if (callers.length == 1) {
       const caller = callers[0];
       const pin = this.pinService.isFilePinned(caller)
         ? {
-          name: "Unpin",
-          action: () => {
-            this.pinService.unpinFile(caller);
-          },
-        }
+            name: "Unpin",
+            action: () => {
+              this.pinService.unpinFile(caller);
+            },
+          }
         : {
-          name: "Quick Pin",
-          action: () => {
-            this.pinService.pinFile(caller);
-          },
-        };
+            name: "Quick Pin",
+            action: () => {
+              this.pinService.pinFile(caller);
+            },
+          };
       content.push(pin);
     }
     if (callers.length == 1) {
@@ -51,7 +52,9 @@ export class FileContextMenuService {
     const copy = {
       name: "Copy",
       action: () => {
-        this.commandsService.copyPathsToClipboard(callers.map(c => c.FilePath));
+        this.commandsService.copyPathsToClipboard(
+          callers.map((c) => c.FilePath),
+        );
       },
     };
     content.push(copy);

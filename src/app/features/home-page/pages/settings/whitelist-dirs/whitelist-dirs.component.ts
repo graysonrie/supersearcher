@@ -1,21 +1,19 @@
-import {
-  Component,
-  ViewChild,
-  ElementRef,
-  AfterViewChecked,
-  ViewChildren,
-  QueryList,
-  AfterViewInit,
-} from "@angular/core";
-import { IconifyIconModule } from "../../../../../shared/components/icons/IconifyIcons/icon.module";
-import { PersistentConfigService } from "@core/services/persistence/config.service";
 import { CommonModule } from "@angular/common";
-import { ButtonWIconComponent } from "../../../../../shared/components/buttons/button-w-icon/button-w-icon.component";
-import { isADiskDrive } from "@shared/util/string";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  QueryList,
+  ViewChildren,
+} from "@angular/core";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { PersistentConfigService } from "@core/services/persistence/config.service";
+import { IconifyIconModule } from "@shared/components/icons/IconifyIcons/icon.module";
+import { isADiskDrive } from "@shared/util/string";
+import { ButtonWIconComponent } from "@shared/components/buttons/button-w-icon/button-w-icon.component";
 
 @Component({
-  selector: "app-exclude-dirs",
+  selector: "app-whitelist-dirs",
   standalone: true,
   imports: [
     IconifyIconModule,
@@ -23,15 +21,15 @@ import { FormControl, ReactiveFormsModule } from "@angular/forms";
     ButtonWIconComponent,
     ReactiveFormsModule,
   ],
-  templateUrl: "./exclude-dirs.component.html",
-  styleUrl: "./exclude-dirs.component.css",
+  templateUrl: "./whitelist-dirs.component.html",
+  styleUrl: "./whitelist-dirs.component.css",
 })
-export class ExcludeDirsComponent implements AfterViewInit {
+export class WhitelistDirsComponent implements AfterViewInit {
   _pendingDirectoriesToAdd: FormControl[] = [];
   @ViewChildren("directoryInput") directoryInputs!: QueryList<ElementRef>;
 
-  directoryNamesToExclude$ = this.configService.observeKey(
-    "crawlerDirectoryNamesExclude",
+  directoryNamesToInclude$ = this.configService.observeKey(
+    "crawlerWhitelistedDirectories",
   );
   constructor(private configService: PersistentConfigService) {}
 
@@ -54,7 +52,7 @@ export class ExcludeDirsComponent implements AfterViewInit {
   }
 
   addPendingDirectory() {
-    this._pendingDirectoriesToAdd.push(new FormControl("Program Files"));
+    this._pendingDirectoriesToAdd.push(new FormControl("C:"));
   }
 
   onInputBlur(control: FormControl) {
@@ -82,18 +80,18 @@ export class ExcludeDirsComponent implements AfterViewInit {
         current.push(dir);
       }
     });
-    await this.configService.update("crawlerDirectoryNamesExclude", current);
+    await this.configService.update("crawlerWhitelistedDirectories", current);
   }
 
   async removeDirectory(dirPath: string) {
     const current = await this.getCurrentState();
     const filtered = current.filter((x) => x != dirPath);
-    await this.configService.update("crawlerDirectoryNamesExclude", filtered);
+    await this.configService.update("crawlerWhitelistedDirectories", filtered);
   }
 
   async getCurrentState() {
     const current = await this.configService.read(
-      "crawlerDirectoryNamesExclude",
+      "crawlerWhitelistedDirectories",
     );
     if (!current) {
       console.warn("Could not find key in config");

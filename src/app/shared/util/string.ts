@@ -28,6 +28,20 @@ export function isADiskDrive(path: string) {
   return path.charAt(1) == ":";
 }
 
+export function normalizeDirectoryPath(path: string): string {
+  return path.replace(/[\\/]+$/, "");
+}
+
+export function isDirectoryWhitelisted(
+  directoryPath: string,
+  whitelist: string[],
+): boolean {
+  const normalized = normalizeDirectoryPath(directoryPath);
+  return whitelist.some(
+    (entry) => normalizeDirectoryPath(entry) === normalized,
+  );
+}
+
 export function replaceBacklashesWithForwardSlashes(text: string) {
   return text.replace(/\\/g, "/");
 }

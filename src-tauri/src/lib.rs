@@ -73,7 +73,7 @@ pub fn run() {
                 .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
 
             #[cfg(target_os = "windows")]
-            window_vibrancy::apply_acrylic(&window, Some((18, 18, 18, 125)))
+            window_vibrancy::apply_mica(&window, None)
                 .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
 
             Ok(())

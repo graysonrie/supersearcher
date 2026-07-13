@@ -1,6 +1,18 @@
-<div *ngIf="drive" class="content">
+@if (whitelist$ | async; as whitelist) {
+  <div
+    class="content"
+    [class.whitelisted]="getWhitelistStyle(whitelist) === 'whitelisted'"
+    [class.muted]="getWhitelistStyle(whitelist) === 'muted'"
+    (contextmenu)="onRightClick($event)"
+  >
+    <app-button-w-icon
+      iconName="drive"
+      iconSize="1.2rem"
+      [iconColor]="getIconColor(whitelist)"
+    >
+      {{ drive.Name }}
+    </app-button-w-icon>
+  </div>
+}
 
-  <app-button-w-icon iconName="drive" iconSize="1.2rem">
-    {{ drive.Name }}
-  </app-button-w-icon>
-</div>
+<app-context-menu #contextMenu />
