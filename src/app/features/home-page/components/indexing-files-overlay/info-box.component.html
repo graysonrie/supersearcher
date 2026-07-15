@@ -1,12 +1,17 @@
-    <div class="container" [ngClass]="{'up':_show}">
+    <div class="container" [ngClass]="{'up':_show, 'maximized':_maximized}">
         <div class="name">
             <div class="title">
                 <app-standard-loader *ngIf="_numItemsBeingIndexed>0"/> 
                 <p>Indexing ({{_numItemsBeingIndexed}}):</p>
             </div>
-            <button (click)="onDropdownClick()">
-                <iconify-icon [icon]="_show ? 'dropDown' : 'dropUp'"/>
-            </button>
+            <div class="actions">
+                <button *ngIf="!_maximized" (click)="onDropdownClick()">
+                    <iconify-icon [icon]="_show ? 'dropDown' : 'dropUp'"/>
+                </button>
+                <button (click)="onMaximizeClick()">
+                    <iconify-icon [icon]="_maximized ? 'minimize' : 'maximize'"/>
+                </button>
+            </div>
         </div>
         <div class="scroll">
             <div *ngFor="let item of _items">

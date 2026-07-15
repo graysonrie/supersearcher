@@ -181,6 +181,15 @@ impl AppKvStoreTable {
         T: Serialize + Clone + DeserializeOwned,
     {
         let caller_val_lock = callers_value.get_json().await;
+
+        // Seed the in-memory subscription cache from the DB when this process hasn't
+        // seen the key yet. Without this, persisted values (e.g. set on first use)
+        // are never picked up on later launches because `has_value_changed` only
+        // compares against the cache.
+        if self.subscriptions.get_key_status(key).await.is_none() {
+            let _ = self.get::<T>(key).await?;
+        }
+
         if self.has_value_changed(key, &caller_val_lock).await {
             if let Some(value) = self.get(key).await? {
                 callers_value.set(value).await;

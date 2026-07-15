@@ -57,12 +57,13 @@ impl FiltererPlugin {
             );
             return false;
         }
-        let last_path_component = path_components
-            .last()
-            .expect("Path components should be verified to not be empty.");
 
+        // Check every component — nested paths like `.cargo\registry\index` must be
+        // excluded when any ancestor directory starts with a period.
         if self.exclude_dirs_starting_with_period.get_data().await
-            && last_path_component.starts_with('.')
+            && path_components
+                .iter()
+                .any(|comp| Self::is_period_prefixed_dir_component(comp))
         {
             return false;
         }
@@ -75,6 +76,11 @@ impl FiltererPlugin {
                 .iter()
                 .any(|exclude| comp.to_lowercase().contains(&exclude.to_lowercase()))
         })
+    }
+
+    /// True for hidden-style directory names (`.cache`, `.cargo`), but not `.` / `..`.
+    fn is_period_prefixed_dir_component(comp: &str) -> bool {
+        comp.starts_with('.') && comp != "." && comp != ".."
     }
 
     pub async fn should_index(&self, path: &Path) -> ShouldIndexResult {
@@ -134,5 +140,36 @@ impl FiltererPlugin {
                 println!("Crawler Filterer: Error updating {}: {}", key, err);
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::FiltererPlugin;
+
+    #[test]
+    fn period_prefixed_components_detected() {
+        assert!(FiltererPlugin::is_period_prefixed_dir_component(".cache"));
+        assert!(FiltererPlugin::is_period_prefixed_dir_component(".cargo"));
+        assert!(!FiltererPlugin::is_period_prefixed_dir_component("."));
+        assert!(!FiltererPlugin::is_period_prefixed_dir_component(".."));
+        assert!(!FiltererPlugin::is_period_prefixed_dir_component("cache"));
+        assert!(!FiltererPlugin::is_period_prefixed_dir_component("index"));
+    }
+
+    #[test]
+    fn nested_period_dir_is_caught_via_any_component() {
+        let components = [
+            "C:",
+            "\\",
+            "Users",
+            "GRieger",
+            ".cargo",
+            "registry",
+            "index",
+        ];
+        assert!(components
+            .iter()
+            .any(|c| FiltererPlugin::is_period_prefixed_dir_component(c)));
     }
 }

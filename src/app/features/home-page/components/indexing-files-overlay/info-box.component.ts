@@ -19,6 +19,7 @@ export class InfoBoxComponent implements OnInit, OnDestroy {
   _items: IndexedDirModel[] = [];
   _numItemsBeingIndexed = 0;
   _show = false;
+  _maximized = false;
   private subscription = new Subscription();
 
   constructor(
@@ -54,6 +55,13 @@ export class InfoBoxComponent implements OnInit, OnDestroy {
 
   onDropdownClick() {
     this.service.toggle();
+  }
+
+  onMaximizeClick() {
+    this._maximized = !this._maximized;
+    if (this._maximized) {
+      this.service.toggleOn();
+    }
   }
 
   numItemsBeingIndexedAsNumber(num: string) {

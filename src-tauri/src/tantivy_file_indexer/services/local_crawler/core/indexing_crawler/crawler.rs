@@ -65,6 +65,17 @@ where
                 }
             }
 
+            // Exclude directories before indexing/queueing them (e.g. `.cache`, `node_modules`).
+            // Without this, excluded dirs still appear in recently-indexed and get pushed
+            // to the queue, only to be skipped later when dequeued.
+            if metadata.is_dir() {
+                if let Some(filterer) = &filterer {
+                    if !filterer.should_crawl_directory(&entry_path).await {
+                        continue;
+                    }
+                }
+            }
+
             match SystemFileModel::try_new_from_meta(entry_path.clone(), &metadata) {
                 Ok(dto) => {
                     dtos.push(dto);

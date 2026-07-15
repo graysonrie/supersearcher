@@ -21,15 +21,36 @@
     bottom: 1rem;
 }
 
+.container.maximized{
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    width: auto;
+    height: auto;
+    z-index: 100;
+    background: var(--bg-solid);
+}
+
 
 .name{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+}
+.actions{
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
 }
 .name button{
     padding: 0px;
     border:none;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
 }
 .name button:hover{
     color:var(--primary)

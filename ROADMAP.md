@@ -1,29 +1,15 @@
-# Roadmap:
+the idea:
 
-- Custom SVG icons for everything
+we add options in settings to disable adding clicked directories to the queue
 
-- Ability to drop files inside other programs, folders, or on desktop
+then, we have a lightweight schedule table that stores
+schedules (
+  for_directory  TEXT PRIMARY KEY,  -- e.g. "C:\\"
+  interval_secs  INTEGER NOT NULL,   -- e.g. 30 days
+  last_run_at    INTEGER NULL        -- unix; NULL = never / due now
+)
 
--  Sort functionality:
-* Date Modified
-* Date Created
-* Size
-* Sort by Drive
+the the schedule is only checked ONLY if the crawler is trying to do busy work
+* Thus, the user should only be able to add DRIVES to the schedules
 
-- Large icon view as well as standard List view
-
-- Ability to drop files in from the OS file explorer
-
-- Optimized file crawlers
-
-- File preview
-
-- View of drives and see how much space is left on them
-
-- Richer context menus
-
-- Ability to share files/folders with other people with the app over LAN
-
-- Ability to back up files somewhere
-
-- Feature where the user can perform a system scan and find out what is taking up the most storage and an the ability to automatically clean things out
+If 
