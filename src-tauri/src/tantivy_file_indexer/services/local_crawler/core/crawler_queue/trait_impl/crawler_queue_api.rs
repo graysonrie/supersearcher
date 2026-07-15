@@ -1,4 +1,4 @@
-use std::{path::PathBuf, sync::Arc};
+use std::path::PathBuf;
 
 use crate::tantivy_file_indexer::{
     services::local_db::tables::crawler_queue::entities::indexed_dir,
@@ -57,9 +57,5 @@ impl CrawlerQueueApi for CrawlerQueue {
         self.set_taken_to_false_all()
             .await
             .map_err(|err| err.to_string())
-    }
-
-    fn get_notifier(&self) -> std::sync::Arc<tokio::sync::Notify> {
-        Arc::clone(&self.notify)
     }
 }

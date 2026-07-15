@@ -5,6 +5,9 @@ pub struct Model {
     #[sea_orm(primary_key, auto_increment = false)]
     pub path: String,
     pub time: i64, // UNIX time
+
+    /// NEW FIELD
+    pub allow_reindexing_after_time: Option<DateTime>
 }
 
 #[derive(Copy, Clone, Debug, EnumIter)]

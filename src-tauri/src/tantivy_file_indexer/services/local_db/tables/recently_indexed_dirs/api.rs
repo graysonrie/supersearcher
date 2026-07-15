@@ -1,12 +1,10 @@
 use std::sync::Arc;
 
 use chrono::Utc;
-use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter};
+use sea_orm::{ColumnTrait, ConnectionTrait, DatabaseConnection, EntityTrait, QueryFilter};
 use sqlx::{Sqlite, Transaction};
 
-use crate::tantivy_file_indexer::services::local_db::{
-    table_creator::generate_table_lenient,
-};
+use crate::tantivy_file_indexer::services::local_db::table_creator::generate_table;
 
 use super::entities::recently_indexed_dir;
 
@@ -16,7 +14,18 @@ pub struct RecentlyIndexedDirectoriesTable {
 
 impl RecentlyIndexedDirectoriesTable {
     pub async fn new_async(db: Arc<DatabaseConnection>) -> Self {
-        generate_table_lenient(&db, recently_indexed_dir::Entity).await;
+        if let Err(e) = generate_table(&db, recently_indexed_dir::Entity).await {
+            eprintln!("Error generating recently indexed dir table: {e}");
+
+            if let Err(table_err) = db
+                .execute_unprepared(
+                    "ALTER TABLE recently_indexed ADD COLUMN allow_reindexing_after_time TEXT",
+                )
+                .await
+            {
+                eprintln!("Error adding allow_reindexing_after_time column: {table_err}");
+            }
+        }
 
         Self { db }
     }
@@ -33,7 +42,7 @@ impl RecentlyIndexedDirectoriesTable {
         // Prepare raw SQL for upsert
         let query = r#"
             INSERT INTO recently_indexed (path, time)
-            VALUES (?, ?)
+            VALUES (?, ?, ?)
             ON CONFLICT(path) DO UPDATE SET
                 time = excluded.time;
         "#;
@@ -43,6 +52,7 @@ impl RecentlyIndexedDirectoriesTable {
             sqlx::query(query)
                 .bind(&model.path)
                 .bind(model.time)
+                .bind(model.allow_reindexing_after_time)
                 .execute(&mut *transaction)
                 .await?;
         }

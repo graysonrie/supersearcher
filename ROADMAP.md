@@ -1,29 +1,14 @@
-# Roadmap:
+What we need:
 
-- Custom SVG icons for everything
+1. Button on the bottom-left file screen indexer where you can fullscreen it.
 
-- Ability to drop files inside other programs, folders, or on desktop
+2. Way to define 'schedules'. You pick a directory (or drive) and say, I want to only index this every 30 days and 5 hours. This gets added to the database. The crawlers read from it. When they receive a sub-file from the directory, they add a note on that schedule of the first TIME the item was indexed. When adding stuff to the recently indexed table, they do TODAYS_TIME + SCHEDULE_DURATION - FIRST_INDEXED_TIME 
 
--  Sort functionality:
-* Date Modified
-* Date Created
-* Size
-* Sort by Drive
+ex:
+todays time: 9:00
+schedule duration: 2 hours
+first indexed time: 8:00
 
-- Large icon view as well as standard List view
+a file added to recently indexed dirs at this point 
 
-- Ability to drop files in from the OS file explorer
-
-- Optimized file crawlers
-
-- File preview
-
-- View of drives and see how much space is left on them
-
-- Richer context menus
-
-- Ability to share files/folders with other people with the app over LAN
-
-- Ability to back up files somewhere
-
-- Feature where the user can perform a system scan and find out what is taking up the most storage and an the ability to automatically clean things out
+3. Ensure that whitelisting directories, especially in rapid succession makes the crawlers do what they're supposed to do

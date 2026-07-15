@@ -19,6 +19,7 @@ type CrawlerFactory = factory::IndexingCrawlersFactory<CrawlerQueue, TantivyPipe
 /// A message from the crawler task manager
 pub enum CrawlerMessage {
     Kill,
+    #[allow(dead_code)]
     Throttle,
 }
 pub type CrawlerManagerMessageReceiver = mpsc::Receiver<CrawlerMessage>;

@@ -4,7 +4,8 @@ use chrono::Utc;
 
 use crate::tantivy_file_indexer::{
     services::local_db::tables::{
-        crawler_queue::entities::indexed_dir, recently_indexed_dirs::entities::recently_indexed_dir,
+        crawler_queue::entities::indexed_dir,
+        recently_indexed_dirs::entities::recently_indexed_dir, schedules::api::ScheduleTable,
     },
     shared::indexing_crawler::models::crawler_file::CrawlerFile,
 };
@@ -15,7 +16,7 @@ impl From<CrawlerFile> for indexed_dir::Model {
             path: val.path.to_string_lossy().to_string(),
             priority: val.priority,
             taken: val.taken,
-            added_at: val.added_at  
+            added_at: val.added_at,
         }
     }
 }
@@ -26,7 +27,7 @@ impl From<indexed_dir::Model> for CrawlerFile {
             path: PathBuf::from(val.path),
             priority: val.priority,
             taken: val.taken,
-            added_at: val.added_at
+            added_at: val.added_at,
         }
     }
 }
@@ -43,16 +44,22 @@ impl From<(PathBuf, u32)> for CrawlerFile {
             path: value.0,
             priority: value.1,
             taken: false,
-            added_at: Utc::now()
+            added_at: Utc::now(),
         }
     }
 }
 
-impl From<CrawlerFile> for recently_indexed_dir::Model {
-    fn from(val: CrawlerFile) -> Self {
-        Self {
-            path: val.path.to_string_lossy().to_string(),
-            time: Utc::now().timestamp(),
-        }
+pub async fn try_into_recently_indexed_dir(
+    crawler_file: CrawlerFile,
+    schedules: &ScheduleTable,
+) -> recently_indexed_dir::Model {
+    let allow_reindexing_after_time = schedules
+        .compute_allow_reindexing_after_time(&crawler_file.path)
+        .await;
+
+    recently_indexed_dir::Model {
+        path: crawler_file.path.to_string_lossy().to_string(),
+        time: Utc::now().timestamp(),
+        allow_reindexing_after_time,
     }
 }

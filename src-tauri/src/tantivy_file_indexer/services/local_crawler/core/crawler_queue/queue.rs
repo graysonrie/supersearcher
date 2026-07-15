@@ -11,6 +11,7 @@ use crate::tantivy_file_indexer::services::local_db::{
         recently_indexed_dirs::{
             api::RecentlyIndexedDirectoriesTable, entities::recently_indexed_dir,
         },
+        schedules::api::ScheduleTable,
     },
 };
 
@@ -103,7 +104,10 @@ impl CrawlerQueue {
         // Notify all workers
         self.notify.notify_waiters();
 
-        let recently_indexed_dir_models = self.entries_to_recently_indexed_model(&entries);
+        let schedules = self.db.schedule_table();
+        let recently_indexed_dir_models = self
+            .entries_to_recently_indexed_model(&entries, schedules)
+            .await;
         // Add to recently indexed
         self.get_recently_indexed_dirs_table()
             .upsert_many(&recently_indexed_dir_models)
@@ -135,6 +139,15 @@ impl CrawlerQueue {
         Ok(res)
     }
 
+    /// Filters out the directories that are under the effect of a schedule
+    // async fn filter_out_directories_under_schedule(
+    //     &self,
+    //     entries: &[(PathBuf, u32)],
+    // ) -> Result<Vec<(PathBuf, u32)>, DbErr> {
+    //     let schedules = self.db.schedule_table().await;
+
+    // }
+
     /**
      Turns the entries into a format accepted by the crawler queue
     */
@@ -153,17 +166,27 @@ impl CrawlerQueue {
     /**
      Turns the entries into a format accepted by the recently indexed directories
     */
-    fn entries_to_recently_indexed_model(
+    async fn entries_to_recently_indexed_model(
         &self,
         entries: &[(PathBuf, u32)],
+        schedules: &ScheduleTable,
     ) -> Vec<recently_indexed_dir::Model> {
-        entries
-            .iter()
-            .map(|(path, _)| recently_indexed_dir::Model {
-                path: path.to_string_lossy().into_owned(),
-                time: Utc::now().timestamp(),
-            })
-            .collect()
+        use futures::future::join_all;
+
+        let futures = entries.iter().map(|(path, _)| {
+            let path = path.clone();
+            async move {
+                let allow_reindexing_after_time =
+                    schedules.compute_allow_reindexing_after_time(&path).await;
+                recently_indexed_dir::Model {
+                    path: path.to_string_lossy().into_owned(),
+                    time: Utc::now().timestamp(),
+                    allow_reindexing_after_time,
+                }
+            }
+        });
+
+        join_all(futures).await
     }
 
     fn get_crawler_queue_table(&self) -> &CrawlerQueueTable {

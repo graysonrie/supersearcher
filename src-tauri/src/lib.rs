@@ -61,6 +61,9 @@ pub fn run() {
             files_exist_in_clipboard,
             create_new_file,
             create_new_directory,
+            // Schedules
+            add_schedule,
+            remove_schedule
         ])
         .setup(|app| {
             let app_handle = app.handle().clone();

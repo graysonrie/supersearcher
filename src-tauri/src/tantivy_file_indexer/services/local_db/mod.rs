@@ -29,4 +29,11 @@ pub mod tables {
         }
         pub mod tauri_exports;
     }
+    pub mod schedules {
+        pub mod api;
+        mod entities {
+            pub mod schedule_entry;
+        }
+    }
 }
+pub mod models;

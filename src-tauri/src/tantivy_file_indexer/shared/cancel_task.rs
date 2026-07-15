@@ -67,12 +67,4 @@ impl CancellableTask {
         }
     }
 
-    pub async fn wait_until_complete(&self) {
-        let mut rx = self.completed.1.clone();
-        while !*rx.borrow() {
-            if rx.changed().await.is_err() {
-                return; // Channel closed
-            }
-        }
-    }
 }

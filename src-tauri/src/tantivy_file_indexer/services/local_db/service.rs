@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use crate::tantivy_file_indexer::services::app_save::service::AppSaveService;
+use crate::tantivy_file_indexer::services::{app_save::service::AppSaveService, local_db::tables::schedules::api::ScheduleTable};
 
 use super::tables::{
     app_kv_store::api::AppKvStoreTable, crawler_queue::api::CrawlerQueueTable,
@@ -14,6 +14,7 @@ pub struct LocalDbService {
     connection: Arc<DatabaseConnection>,
     recently_indexed_dirs_table: RecentlyIndexedDirectoriesTable,
     crawler_queue_table: CrawlerQueueTable,
+    schedule_table: ScheduleTable,
     kv_store_table: AppKvStoreTable,
 }
 
@@ -33,6 +34,8 @@ impl LocalDbService {
 
         let crawler_queue_table = CrawlerQueueTable::new_async(db.clone()).await;
 
+        let schedule_table = ScheduleTable::new_async(db.clone()).await;
+
         let kv_store_table = AppKvStoreTable::new_async(db.clone(), app_handle).await;
 
         Self {
@@ -40,11 +43,16 @@ impl LocalDbService {
             recently_indexed_dirs_table,
             crawler_queue_table,
             kv_store_table,
+            schedule_table
         }
     }
 
     pub fn recently_indexed_dirs_table(&self) -> &RecentlyIndexedDirectoriesTable {
         &self.recently_indexed_dirs_table
+    }
+
+    pub fn schedule_table(&self) -> &ScheduleTable {
+        &self.schedule_table
     }
 
     pub fn crawler_queue_table(&self) -> &CrawlerQueueTable {
