@@ -21,16 +21,16 @@ Super Searcher crawls your drives in the background, builds a full-text search i
 | -------- | ------------------------------------------------------ |
 | Frontend | Angular 17, Angular Material, RxJS                     |
 | Desktop  | Tauri 2                                                |
-| Backend  | Rust — Tantivy (search), SeaORM + SQLite (persistence) |
+| Backend  | Rust - Tantivy (search), SeaORM + SQLite (persistence) |
 
 ## Prerequisites
 
 Before building, install the following on your machine:
 
-1. **Node.js** (v18 or newer) — https://nodejs.org
-2. **Yarn** (Classic) — `npm install --global yarn`
-3. **Rust** (stable toolchain) — https://rustup.rs
-4. **Tauri system dependencies** — follow the official guide for your OS: https://tauri.app/start/prerequisites/
+1. **Node.js** (v18 or newer) - https://nodejs.org
+2. **Yarn** (Classic) - `npm install --global yarn`
+3. **Rust** (stable toolchain) - https://rustup.rs
+4. **Tauri system dependencies** - follow the official guide for your OS: https://tauri.app/start/prerequisites/
 
    - **Windows:** Microsoft C++ Build Tools and the WebView2 runtime (preinstalled on Windows 10/11).
    - **macOS:** Xcode Command Line Tools (`xcode-select --install`).
