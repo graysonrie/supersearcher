@@ -12,8 +12,6 @@ Super Searcher crawls your drives in the background, builds a full-text search i
 - **File browser** – navigate directories with history, sorting, and drive listing.
 - **File operations** – copy/paste, move, delete to recycle bin, open in file explorer, and drag files out of the app.
 - **Live directory watching** – results stay in sync as files change on disk.
-- **Built-in PDF viewer** and file icon previews.
-- **Native window chrome** with Mica (Windows) and vibrancy (macOS) effects.
 
 ## Tech Stack
 
@@ -96,8 +94,6 @@ The compiled installers and binaries are written to:
 ```
 src-tauri/target/release/bundle/
 ```
-
-Bundle targets (`.msi`/`.exe` on Windows, `.dmg`/`.app` on macOS, `.deb`/`.AppImage` on Linux) are produced according to your operating system.
 
 ## Configuration
 
