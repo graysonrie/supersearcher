@@ -23,7 +23,7 @@ Super Searcher crawls your drives in the background, builds a full-text search i
 
 | Layer    | Technology                                             |
 | -------- | ------------------------------------------------------ |
-| Frontend | Angular 17, Angular Material, RxJS                     |
+| Frontend | Angular 17, RxJS                                       |
 | Desktop  | Tauri 2                                                |
 | Backend  | Rust - Tantivy (search), SeaORM + SQLite (persistence) |
 
