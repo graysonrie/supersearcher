@@ -13,6 +13,12 @@ Super Searcher crawls your drives in the background, builds a full-text search i
 - **File operations** – copy/paste, move, delete to recycle bin, open in file explorer, and drag files out of the app.
 - **Live directory watching** – results stay in sync as files change on disk.
 
+## Screenshots
+<img width="400" height="300" alt="Screenshot 2026-07-18 114906" src="https://github.com/user-attachments/assets/083d2625-47f0-4390-aba6-eae626de44cf" />
+<img width="400" height="300" alt="Screenshot 2026-07-18 114820" src="https://github.com/user-attachments/assets/d180d00b-0fd8-4ed2-9cf8-cd7b45b03f4d" />
+<img width="400" height="300" alt="Screenshot 2026-07-18 114922" src="https://github.com/user-attachments/assets/a1ec5feb-9dd9-4783-b36d-707ab13bf73c" />
+
+
 ## Tech Stack
 
 | Layer    | Technology                                             |
