@@ -1,0 +1,98 @@
+.container {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+}
+
+.description {
+  font-size: 0.8rem;
+  font-family: "Poppins";
+  margin: 0px;
+  padding: 2px;
+  padding-bottom: 4px;
+  color: var(--text-muted);
+}
+
+.schedules-container .top-box {
+  border: 1px solid var(--input);
+  padding: 0.5rem;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.schedules-container .item {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  border-radius: 0.4rem;
+  padding: 0.2rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.schedules-container .item:hover {
+  background-color: var(--select);
+}
+
+.drive-info {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  min-width: 4rem;
+}
+
+.schedule-controls {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.interval-input {
+  width: 4rem;
+  background: transparent;
+  border: 1px solid var(--input);
+  border-radius: 0.4rem;
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  padding: 0.2rem 0.4rem;
+  outline: none;
+}
+
+.interval-input:focus {
+  border-color: var(--text-primary);
+}
+
+.days-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: "Poppins";
+}
+
+.trash-button {
+  border: 0px;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.trash-button:hover {
+  color: red;
+}
+
+.icon {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.setting-title {
+  padding-bottom: 0.5rem;
+}
+
+p {
+  margin: 0px;
+}

@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="icon setting-title">
+    <iconify-icon icon="keyframes" />
+    <p><b>Index Schedules</b>:</p>
+  </div>
+
+  <p class="description">
+    Set how often each drive should be automatically re-indexed when idle. Leave
+    blank to always re-index. Manual indexing is never blocked.
+  </p>
+
+  <div class="schedules-container">
+    <div class="top-box">
+      <div *ngFor="let row of rows" class="item">
+        <div class="drive-info">
+          <iconify-icon icon="drive" />
+          <p>{{ row.drive.Name }}</p>
+        </div>
+
+        <div class="schedule-controls">
+          <input
+            type="number"
+            class="interval-input"
+            min="1"
+            placeholder="Always"
+            [(ngModel)]="row.intervalDays"
+            (blur)="onIntervalBlur(row)"
+            (keydown)="onIntervalKeydown($event, row)"
+          />
+          <span class="days-label">days</span>
+          <button
+            *ngIf="row.hasSchedule"
+            class="trash-button"
+            type="button"
+            (click)="removeSchedule(row)"
+          >
+            <iconify-icon icon="trash" />
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

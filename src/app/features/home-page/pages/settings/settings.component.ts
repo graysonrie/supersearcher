@@ -4,11 +4,13 @@ import { IconifyIconModule } from "../../../../shared/components/icons/IconifyIc
 import { ExcludeDirsComponent } from "./exclude-dirs/exclude-dirs.component";
 import { SetCrawlersAmtComponent } from "./set-crawlers-amt/set-crawlers-amt.component";
 import { WhitelistDirsComponent } from "./whitelist-dirs/whitelist-dirs.component";
+import { MiscSettingsComponent } from "./misc-settings/misc-settings.component";
+import { IndexSchedulesComponent } from "./index-schedules/index-schedules.component";
 
 @Component({
   selector: "app-settings",
   standalone: true,
-  imports: [CommonModule, IconifyIconModule, ExcludeDirsComponent, SetCrawlersAmtComponent, WhitelistDirsComponent],
+  imports: [CommonModule, IconifyIconModule, ExcludeDirsComponent, SetCrawlersAmtComponent, WhitelistDirsComponent, MiscSettingsComponent, IndexSchedulesComponent],
   templateUrl: "./settings.component.html",
   styleUrl: "./settings.component.css",
 })

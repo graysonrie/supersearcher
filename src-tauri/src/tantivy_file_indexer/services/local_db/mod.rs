@@ -15,6 +15,12 @@ pub mod tables {
             pub mod recently_indexed_dir;
         }
     }
+    pub mod schedules {
+        pub mod api;
+        pub mod entities {
+            pub mod schedule_entry;
+        }
+    }
     pub mod app_kv_store{
         pub mod api;
         mod models{

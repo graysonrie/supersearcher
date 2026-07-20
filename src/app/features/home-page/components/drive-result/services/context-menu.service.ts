@@ -2,12 +2,16 @@ import { Injectable } from "@angular/core";
 import { ContextMenuComponent } from "@shared/components/popups/context-menu/context-menu.component";
 import { ContextMenuButton } from "@shared/components/popups/context-menu/models/ContextMenuButton";
 import { PersistentConfigService } from "@core/services/persistence/config.service";
+import { FileCrawlerService } from "@core/services/files/backend/file_crawler.service";
 import { DriveModel } from "@core/models/drive-model";
 import { isDirectoryWhitelisted, normalizeDirectoryPath } from "@shared/util/string";
 
 @Injectable()
 export class DriveContextMenuService {
-  constructor(private config: PersistentConfigService) {}
+  constructor(
+    private config: PersistentConfigService,
+    private fileCrawlerService: FileCrawlerService,
+  ) {}
 
   async openMenu(
     menu: ContextMenuComponent,
@@ -25,26 +29,40 @@ export class DriveContextMenuService {
       (await this.config.read("crawlerWhitelistedDirectories")) ?? [];
     const isWhitelisted = isDirectoryWhitelisted(caller.Name, currentWhitelisted);
 
-    const content: ContextMenuButton[] = isWhitelisted
-      ? [
-          {
-            name: "Remove from whitelist",
-            action: () => {
-              void this.removeFromWhitelist(caller.Name);
-            },
-          },
-        ]
-      : [
-          {
-            name: "Whitelist",
-            action: () => {
-              void this.addToWhitelist(caller.Name);
-            },
-          },
-        ];
+    const content: ContextMenuButton[] = [
+      {
+        name: "Index Now",
+        action: () => {
+          void this.indexDirectory(caller.Name);
+        },
+      },
+    ];
+
+    if (isWhitelisted) {
+      content.push({
+        name: "Remove from whitelist",
+        action: () => {
+          void this.removeFromWhitelist(caller.Name);
+        },
+      });
+    } else {
+      content.push({
+        name: "Whitelist",
+        action: () => {
+          void this.addToWhitelist(caller.Name);
+        },
+      });
+    }
 
     menu.content = content;
     menu.toggleOpen(event);
+  }
+
+  private async indexDirectory(path: string): Promise<void> {
+    await this.fileCrawlerService.addDirectoriesToQueue([
+      { DirPath: path, Priority: 0 },
+    ]);
+    console.log("Added directories to crawler queue:", [path]);
   }
 
   private async addToWhitelist(driveName: string): Promise<void> {

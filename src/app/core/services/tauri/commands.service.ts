@@ -9,6 +9,7 @@ import { SearchParamsDTO } from "@core/dtos/search-params-dto";
 import { StreamingSearchParamsDTO } from "@core/dtos/streaming-search-params-dtos";
 import { AddToCrawlerQueueDTO } from "@core/dtos/add-to-crawler-queue-dto";
 import { IndexedDirModel } from "../../models/indexed-dir-model";
+import { IndexScheduleModel } from "../../models/index-schedule-model";
 
 import { SafeInvokeService } from "./safe-invoke.service";
 import { EmitMetadataModel } from "@core/models/emit-metadata-model";
@@ -189,6 +190,26 @@ export class TauriCommandsService {
       .catch((err) => {
         throw new Error(`${err}`);
       });
+  }
+
+  async getIndexSchedules(): Promise<IndexScheduleModel[]> {
+    return await this.invokeSafe<IndexScheduleModel[]>("get_index_schedules");
+  }
+
+  async upsertIndexSchedule(
+    forDirectory: string,
+    intervalDays: number,
+  ): Promise<void> {
+    await this.invokeSafe<void>("upsert_index_schedule", {
+      forDirectory,
+      intervalDays,
+    });
+  }
+
+  async removeIndexSchedule(forDirectory: string): Promise<void> {
+    await this.invokeSafe<void>("remove_index_schedule", {
+      forDirectory,
+    });
   }
 
   async searchFilesInline(query: InlineQueryDTO): Promise<FileModel[]> {

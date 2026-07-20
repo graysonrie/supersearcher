@@ -11,5 +11,3 @@ schedules (
 
 the the schedule is only checked ONLY if the crawler is trying to do busy work
 * Thus, the user should only be able to add DRIVES to the schedules
-
-If 

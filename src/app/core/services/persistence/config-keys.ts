@@ -25,4 +25,5 @@ export interface ConfigKeys {
 
   /** If there are any directories in this list, the crawler will no longer index all directories, and instead only index the directories in this list, and their subdirectories */
   crawlerWhitelistedDirectories: string[];
+  addDirectoriesToCrawlerQueueOnClick:boolean;
 }

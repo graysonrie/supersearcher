@@ -14,7 +14,6 @@ import { MatIconModule } from "@angular/material/icon";
 import { IconifyIconModule } from "@shared/components/icons/IconifyIcons/icon.module";
 import { FileModel } from "@core/models/file-model";
 import { HighlightableLabelComponent } from "@shared/components/highlightable-label/highlightable-label.component";
-import { PinService } from "src/app/features/home-page/services/pin.service";
 import { defaultFileState, FileState } from "./file-state";
 import { FileContextMenuService } from "./services/context-menu.service";
 import { FormsModule } from "@angular/forms";
@@ -23,6 +22,7 @@ import { FileIconComponent } from "../file-icon/file-icon.component";
 import { IndexingFilesOverlayService } from "../indexing-files-overlay/indexing-files-overlay.service";
 import { IndexedDirModel } from "@core/models/indexed-dir-model";
 import { animate, style, transition, trigger } from "@angular/animations";
+import { PinService } from "../../services/pin.service";
 // If you are looking for the drag functionality, it gets handled by the parent component
 // 'files-display' for example
 
@@ -45,7 +45,7 @@ import { animate, style, transition, trigger } from "@angular/animations";
         style({ opacity: 0, transform: "translateX(-20px)" }),
         animate(
           "300ms ease-out",
-          style({ opacity: 1, transform: "translateX(0)" })
+          style({ opacity: 1, transform: "translateX(0)" }),
         ),
       ]),
     ]),
@@ -82,7 +82,7 @@ export class FileResultComponent implements OnInit, DoCheck {
   constructor(
     private pinService: PinService,
     private indexingFilesOverlayService: IndexingFilesOverlayService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {

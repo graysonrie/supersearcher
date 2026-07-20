@@ -5,9 +5,12 @@ use tokio::sync::mpsc;
 use crate::{
     shared::models::sys_file_model::SystemFileModel,
     tantivy_file_indexer::{
-        services::local_crawler::core::indexing_crawler::plugins::{
-            FiltererPlugin, GarbageCollectorPlugin, ThrottleAmount, ThrottlePlugin,
-            WhitelisterPlugin,
+        services::{
+            local_crawler::core::indexing_crawler::plugins::{
+                FiltererPlugin, GarbageCollectorPlugin, ThrottleAmount, ThrottlePlugin,
+                WhitelisterPlugin,
+            },
+            local_db::service::LocalDbService,
         },
         shared::indexing_crawler::traits::{
             commit_pipeline::CrawlerCommitPipeline, crawler_queue_api::CrawlerQueueApi,
@@ -26,6 +29,7 @@ where
     garbage_collector: Option<Arc<GarbageCollectorPlugin>>,
     filterer: Option<Arc<FiltererPlugin>>,
     whitelister: Option<Arc<WhitelisterPlugin>>,
+    local_db: Option<Arc<LocalDbService>>,
     throttle: ThrottlePlugin,
 }
 
@@ -42,6 +46,7 @@ where
             garbage_collector: None,
             filterer: None,
             whitelister: None,
+            local_db: None,
             throttle: ThrottlePlugin::new(),
         }
     }
@@ -59,6 +64,10 @@ where
     }
     pub fn set_whitelister(mut self, w: Arc<WhitelisterPlugin>) -> Self {
         self.whitelister = Some(w);
+        self
+    }
+    pub fn set_local_db(mut self, db: Arc<LocalDbService>) -> Self {
+        self.local_db = Some(db);
         self
     }
     pub fn set_throttle(&mut self, t: ThrottleAmount) -> &Self {
@@ -101,6 +110,10 @@ where
             if let Some(w) = &self.whitelister {
                 let whitelister = Arc::clone(w);
                 worker.inject_whitelister(whitelister);
+            }
+
+            if let Some(db) = &self.local_db {
+                worker.inject_local_db(Arc::clone(db));
             }
 
             // Inject a throttle

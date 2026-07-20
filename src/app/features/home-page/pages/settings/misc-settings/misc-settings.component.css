@@ -1,0 +1,86 @@
+.container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 1px solid var(--input);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+}
+
+.setting-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.description {
+  font-size: 0.8rem;
+  font-family: "Poppins";
+  margin: 0;
+  padding: 2px;
+  color: var(--text-muted);
+}
+
+.icon {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.setting-title {
+  padding-bottom: 0.25rem;
+}
+
+p {
+  margin: 0;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 2.75rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--input);
+  border-radius: 1.5rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.switch-slider::before {
+  position: absolute;
+  content: "";
+  height: 1.125rem;
+  width: 1.125rem;
+  left: 0.2rem;
+  bottom: 0.2rem;
+  background-color: var(--text-primary);
+  border-radius: 50%;
+  transition: transform 0.2s ease-in-out;
+}
+
+.switch input:checked + .switch-slider {
+  background-color: var(--primary);
+}
+
+.switch input:checked + .switch-slider::before {
+  transform: translateX(1.25rem);
+}

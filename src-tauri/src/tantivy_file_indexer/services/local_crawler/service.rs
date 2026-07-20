@@ -73,7 +73,8 @@ impl FileCrawlerService {
         let factory = factory::IndexingCrawlersFactory::new(crawler_queue, pipeline)
             .set_garbage_collector(collector)
             .set_filterer(filterer)
-            .set_whitelister(Arc::clone(&self.whitelister));
+            .set_whitelister(Arc::clone(&self.whitelister))
+            .set_local_db(Arc::clone(&self.local_db_service));
 
         self.whitelister.on_whitelist_config_updated().await;
 

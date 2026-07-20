@@ -4,6 +4,7 @@ mod enums {
 }
 mod dtos {
     pub mod add_to_crawler_queue;
+    pub mod index_schedule;
     pub mod search_params_dto;
     pub mod streaming_search_dto;
 }

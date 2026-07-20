@@ -5,12 +5,15 @@ use tokio::sync::mpsc::error::TryRecvError;
 use crate::{
     shared::models::sys_file_model::SystemFileModel,
     tantivy_file_indexer::{
-        services::local_crawler::core::indexing_crawler::{
-            idle,
-            plugins::{
-                FiltererPlugin, GarbageCollectorPlugin, ThrottleAmount, ThrottlePlugin,
-                WhitelisterPlugin,
+        services::{
+            local_crawler::core::indexing_crawler::{
+                idle,
+                plugins::{
+                    FiltererPlugin, GarbageCollectorPlugin, ThrottleAmount, ThrottlePlugin,
+                    WhitelisterPlugin,
+                },
             },
+            local_db::service::LocalDbService,
         },
         shared::{
             async_retry,
@@ -44,6 +47,7 @@ where
     garbage_collector: Option<Arc<GarbageCollectorPlugin>>,
     filterer: Option<Arc<FiltererPlugin>>,
     whitelister: Option<Arc<WhitelisterPlugin>>,
+    local_db: Option<Arc<LocalDbService>>,
     throttle: ThrottlePlugin,
 }
 
@@ -71,6 +75,7 @@ where
             garbage_collector: None,
             filterer: None,
             whitelister: None,
+            local_db: None,
             throttle: ThrottlePlugin::new(),
         }
     }
@@ -85,6 +90,10 @@ where
 
     pub fn inject_whitelister(&mut self, w: Arc<WhitelisterPlugin>) {
         self.whitelister = Some(w);
+    }
+
+    pub fn inject_local_db(&mut self, db: Arc<LocalDbService>) {
+        self.local_db = Some(db);
     }
 
     pub fn set_throttle<T>(&mut self, t: T)
@@ -164,8 +173,10 @@ where
                         self.random_wait().await;
                         let queue_clone = Arc::clone(&self.crawler_queue);
                         let whitelister_clone = self.whitelister.clone();
+                        let local_db_clone = self.local_db.clone();
                         if let Err(err) =
-                            idle::create_busy_work(queue_clone, whitelister_clone).await
+                            idle::create_busy_work(queue_clone, whitelister_clone, local_db_clone)
+                                .await
                         {
                             println!("Crawler Worker - Error creating busy work: {}", err);
                         }

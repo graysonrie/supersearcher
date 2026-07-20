@@ -6,6 +6,7 @@ import { TauriCommandsService } from "@core/services/tauri/commands.service";
 import { FileState } from "../file-state";
 import { ContextMenuButton } from "@shared/components/popups/context-menu/models/ContextMenuButton";
 import { PersistentConfigService } from "@core/services/persistence/config.service";
+import { FileCrawlerService } from "@core/services/files/backend/file_crawler.service";
 import {
   isDirectoryWhitelisted,
   normalizeDirectoryPath,
@@ -17,6 +18,7 @@ export class FileContextMenuService {
     private pinService: PinService,
     private commandsService: TauriCommandsService,
     private config: PersistentConfigService,
+    private fileCrawlerService: FileCrawlerService,
   ) {}
 
   async openMenu(
@@ -58,6 +60,15 @@ export class FileContextMenuService {
 
     const directories = callers.filter((caller) => caller.IsDirectory);
     if (directories.length > 0) {
+      content.push({
+        name: "Index Now",
+        action: () => {
+          void this.indexDirectories(
+            directories.map((directory) => directory.FilePath),
+          );
+        },
+      });
+
       const currentWhitelisted =
         (await this.config.read("crawlerWhitelistedDirectories")) ?? [];
       const whitelistedDirectories = directories.filter((directory) =>
@@ -115,6 +126,13 @@ export class FileContextMenuService {
 
     menu.content = content;
     menu.toggleOpen(event);
+  }
+
+  private async indexDirectories(paths: string[]): Promise<void> {
+    await this.fileCrawlerService.addDirectoriesToQueue(
+      paths.map((path) => ({ DirPath: path, Priority: 0 })),
+    );
+    console.log("Added directories to crawler queue:", paths);
   }
 
   private async addToWhitelist(paths: string[]): Promise<void> {

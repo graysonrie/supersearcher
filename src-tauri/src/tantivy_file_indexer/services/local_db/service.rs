@@ -5,6 +5,7 @@ use crate::tantivy_file_indexer::services::app_save::service::AppSaveService;
 use super::tables::{
     app_kv_store::api::AppKvStoreTable, crawler_queue::api::CrawlerQueueTable,
     recently_indexed_dirs::api::RecentlyIndexedDirectoriesTable,
+    schedules::api::ScheduleTable,
 };
 use sea_orm::{ConnectionTrait, DatabaseConnection, Statement};
 use sqlx::sqlite::SqlitePool;
@@ -14,6 +15,7 @@ pub struct LocalDbService {
     connection: Arc<DatabaseConnection>,
     recently_indexed_dirs_table: RecentlyIndexedDirectoriesTable,
     crawler_queue_table: CrawlerQueueTable,
+    schedule_table: ScheduleTable,
     kv_store_table: AppKvStoreTable,
 }
 
@@ -33,12 +35,15 @@ impl LocalDbService {
 
         let crawler_queue_table = CrawlerQueueTable::new_async(db.clone()).await;
 
+        let schedule_table = ScheduleTable::new_async(db.clone()).await;
+
         let kv_store_table = AppKvStoreTable::new_async(db.clone(), app_handle).await;
 
         Self {
             connection: db,
             recently_indexed_dirs_table,
             crawler_queue_table,
+            schedule_table,
             kv_store_table,
         }
     }
@@ -49,6 +54,10 @@ impl LocalDbService {
 
     pub fn crawler_queue_table(&self) -> &CrawlerQueueTable {
         &self.crawler_queue_table
+    }
+
+    pub fn schedule_table(&self) -> &ScheduleTable {
+        &self.schedule_table
     }
 
     pub fn kv_store_table(&self) -> &AppKvStoreTable {
