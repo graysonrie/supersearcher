@@ -357,6 +357,10 @@ export class TauriCommandsService {
     });
   }
 
+  async clearIndexPath(path: string): Promise<number> {
+    return await this.invokeSafe<number>("clear_index_path", { path });
+  }
+
   /**
    * Why does this method return the same thing you pass in. Well, FileModels on the frontend usually aren't fully initialized. Example: `Popularity` doesn't get filled out.
    *

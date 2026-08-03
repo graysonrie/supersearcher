@@ -5,12 +5,16 @@ import { PersistentConfigService } from "@core/services/persistence/config.servi
 import { FileCrawlerService } from "@core/services/files/backend/file_crawler.service";
 import { DriveModel } from "@core/models/drive-model";
 import { isDirectoryWhitelisted, normalizeDirectoryPath } from "@shared/util/string";
+import { TauriCommandsService } from "@core/services/tauri/commands.service";
+import { ToastService } from "@shared/components/toast/toast.service";
 
 @Injectable()
 export class DriveContextMenuService {
   constructor(
     private config: PersistentConfigService,
     private fileCrawlerService: FileCrawlerService,
+    private commandsService: TauriCommandsService,
+    private toastService: ToastService,
   ) {}
 
   async openMenu(
@@ -34,6 +38,12 @@ export class DriveContextMenuService {
         name: "Index Now",
         action: () => {
           void this.indexDirectory(caller.Name);
+        },
+      },
+      {
+        name: "Remove from Index",
+        action: () => {
+          void this.removeFromIndex(caller.Name);
         },
       },
     ];
@@ -63,6 +73,19 @@ export class DriveContextMenuService {
       { DirPath: path, Priority: 0 },
     ]);
     console.log("Added directories to crawler queue:", [path]);
+  }
+
+  private async removeFromIndex(path: string): Promise<void> {
+    const toastId = this.toastService.show("Removing from index…", {
+      sticky: true,
+    });
+    try {
+      await this.commandsService.clearIndexPath(path);
+      this.toastService.update(toastId, "Removed from index");
+    } catch (err) {
+      console.error("Failed to remove from index:", err);
+      this.toastService.update(toastId, "Failed to remove from index");
+    }
   }
 
   private async addToWhitelist(driveName: string): Promise<void> {

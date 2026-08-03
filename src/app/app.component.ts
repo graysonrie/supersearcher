@@ -8,6 +8,7 @@ import { TauriCommandsService } from "@core/services/tauri/commands.service";
 import { PersistentConfigService } from "@core/services/persistence/config.service";
 import { AddToCrawlerQueueDTO } from "@core/dtos/add-to-crawler-queue-dto";
 import { TauriLifecycleService } from "@core/services/tauri/lifecycle.service";
+import { ToastComponent } from "@shared/components/toast/toast.component";
 
 @Component({
   selector: "app-root",
@@ -17,6 +18,7 @@ import { TauriLifecycleService } from "@core/services/tauri/lifecycle.service";
     RouterOutlet,
     IconifyIconModule,
     WindowsWindowChromeComponent,
+    ToastComponent,
   ],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.scss",

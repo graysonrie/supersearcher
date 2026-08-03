@@ -11,6 +11,7 @@ import {
   isDirectoryWhitelisted,
   normalizeDirectoryPath,
 } from "@shared/util/string";
+import { ToastService } from "@shared/components/toast/toast.service";
 
 @Injectable()
 export class FileContextMenuService {
@@ -19,6 +20,7 @@ export class FileContextMenuService {
     private commandsService: TauriCommandsService,
     private config: PersistentConfigService,
     private fileCrawlerService: FileCrawlerService,
+    private toastService: ToastService,
   ) {}
 
   async openMenu(
@@ -64,6 +66,14 @@ export class FileContextMenuService {
         name: "Index Now",
         action: () => {
           void this.indexDirectories(
+            directories.map((directory) => directory.FilePath),
+          );
+        },
+      });
+      content.push({
+        name: "Remove from Index",
+        action: () => {
+          void this.removeFromIndex(
             directories.map((directory) => directory.FilePath),
           );
         },
@@ -133,6 +143,21 @@ export class FileContextMenuService {
       paths.map((path) => ({ DirPath: path, Priority: 0 })),
     );
     console.log("Added directories to crawler queue:", paths);
+  }
+
+  private async removeFromIndex(paths: string[]): Promise<void> {
+    const toastId = this.toastService.show("Removing from index…", {
+      sticky: true,
+    });
+    try {
+      for (const path of paths) {
+        await this.commandsService.clearIndexPath(path);
+      }
+      this.toastService.update(toastId, "Removed from index");
+    } catch (err) {
+      console.error("Failed to remove from index:", err);
+      this.toastService.update(toastId, "Failed to remove from index");
+    }
   }
 
   private async addToWhitelist(paths: string[]): Promise<void> {

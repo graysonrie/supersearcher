@@ -131,5 +131,11 @@ impl SearchIndexService {
         self.search_index.remove_by_terms(terms).await?;
         Ok(false)
     }
+
+    /// Remove the given directory (or drive) and all nested indexed paths from Tantivy.
+    /// Returns the number of documents removed.
+    pub async fn clear_path(&self, path: &str) -> Result<u64, String> {
+        super::pipelines::clear_path::clear_path(&self.search_index, path).await
+    }
 }
 

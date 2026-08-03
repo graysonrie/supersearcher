@@ -46,6 +46,7 @@ pub fn run() {
             get_file_from_index,
             upsert_file_to_index,
             validate_file_exists,
+            clear_index_path,
             get_sys_info,
             // Common commands:
             move_path_into_directory,

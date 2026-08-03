@@ -1,0 +1,32 @@
+.toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 10000;
+  max-width: min(24rem, calc(100vw - 2rem));
+  padding: 0.75rem 1rem;
+  border-radius: 0.6rem;
+  background: var(--surface, #2a2a2e);
+  color: var(--text-primary, #f2f2f2);
+  border: 1px solid var(--input, #3a3a40);
+  font-family: "Poppins", sans-serif;
+  font-size: 0.85rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+  animation: toast-in 0.18s ease-out;
+}
+
+.toast.sticky {
+  opacity: 0.95;
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.4rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

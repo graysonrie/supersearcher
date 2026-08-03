@@ -128,3 +128,11 @@ pub async fn validate_file_exists(
     search_service.validate_file_exists(&path).await.map_err(|err| err.to_string())
 }
 
+#[tauri::command]
+pub async fn clear_index_path(
+    path: String,
+    search_service: State<'_, Arc<SearchIndexService>>,
+) -> Result<u64, String> {
+    search_service.clear_path(&path).await
+}
+

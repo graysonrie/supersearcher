@@ -3,6 +3,7 @@ pub mod models {
 }
 pub mod pipelines {
     pub mod tantivy_pipeline;
+    pub mod clear_path;
     mod util;
 }
 mod services {
